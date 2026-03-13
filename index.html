@@ -362,7 +362,7 @@
         // Key is restricted in Google Cloud Console to this site's domain only.
         // See: console.cloud.google.com → APIs & Services → Credentials
         const GEMINI_API_KEY = 'AIzaSyBJQngXiGRN2EzbaXSwAgygwlsa6566ijI';
-        const GEMINI_MODEL = 'gemini-2.5-pro';
+        const GEMINI_MODEL = 'gemini-2.0-flash';
 
         // --- GEMINI API HELPERS ---
         async function fetchGemini(prompt, systemInstruction = "", schema = null) {
@@ -395,7 +395,10 @@
                     }
                     
                     const data = await response.json();
-                    return data.candidates[0].content.parts[0].text;
+                    // Find the first non-thought part (handles thinking models too)
+                    const parts = data.candidates[0].content.parts;
+                    const textPart = parts.find(p => !p.thought && p.text) || parts[0];
+                    return textPart.text;
                 } catch (error) {
                     if (i === 5) throw error;
                     await new Promise(r => setTimeout(r, delays[i]));
