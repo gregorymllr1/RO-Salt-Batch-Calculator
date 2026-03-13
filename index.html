@@ -457,7 +457,7 @@
 
             } catch (err) {
                 console.error(err);
-                showStatus('error', 'Failed to generate recipe from Gemini API.');
+                showStatus('error', `Gemini error: ${err.message}`);
             } finally {
                 btn.innerHTML = originalBtnText;
                 btn.disabled = false;
