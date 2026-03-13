@@ -13,7 +13,7 @@ export default async (req: Request, context: Context) => {
     const prompt = body.contents?.[0]?.parts?.[0]?.text;
     const systemInstruction = body.systemInstruction?.parts?.[0]?.text;
     const schema = body.generationConfig?.responseSchema;
-    const model = body.model || 'gemini-2.0-flash';
+    const model = body.model || 'gemini-2.5-pro';
 
     if (!prompt) {
       return new Response('Missing prompt', { status: 400 });
