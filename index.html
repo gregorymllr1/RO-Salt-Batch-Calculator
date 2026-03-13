@@ -306,8 +306,7 @@
 
     <script>
         // --- GEMINI API CONFIGURATION ---
-        // API Key is now securely managed by Netlify AI Gateway via /api/gemini endpoint
-        
+               
         // --- 1. CORE DATA FROM NOTEBOOK ---
         const R_GAS = 0.082057;
         let lastPriceUpdate = 'Not updated in this session';
@@ -361,8 +360,8 @@
         // --- GEMINI API CONFIGURATION ---
         // Key is restricted in Google Cloud Console to this site's domain only.
         // See: console.cloud.google.com → APIs & Services → Credentials
-        const GEMINI_API_KEY = 'AIzaSyBJQngXiGRN2EzbaXSwAgygwlsa6566ijI';
-        const GEMINI_MODEL = 'gemini-2.0-flash';
+        const GEMINI_API_KEY = 'AIzaSyDMWCgITphwemNG_1enYb0CtW3nxRvfo8o';
+        const GEMINI_MODEL = 'gemini-2.5-pro';
 
         // --- GEMINI API HELPERS ---
         async function fetchGemini(prompt, systemInstruction = "", schema = null) {
