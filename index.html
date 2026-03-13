@@ -306,7 +306,7 @@
 
     <script>
         // --- GEMINI API CONFIGURATION ---
-        const apiKey = "AIzaSyA6Tsfz0MOurFNo_TVDjM8UepM3XgRJNTo"; // API Key provided by execution environment
+        // API Key is now securely managed by Netlify AI Gateway via /api/gemini endpoint
         
         // --- 1. CORE DATA FROM NOTEBOOK ---
         const R_GAS = 0.082057;
@@ -360,7 +360,7 @@
 
         // --- GEMINI API HELPERS ---
         async function fetchGemini(prompt, systemInstruction = "", schema = null) {
-            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
+            const url = `/api/gemini`;
             const payload = {
                 contents: [{ parts: [{ text: prompt }] }],
             };
