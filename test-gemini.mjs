@@ -2,7 +2,7 @@ const apiKey = process.env.GEMINI_API_KEY;
 const baseUrl = process.env.GOOGLE_GEMINI_BASE_URL || 'https://generativelanguage.googleapis.com/';
 console.log("baseUrl", baseUrl);
 
-const url = new URL('gemini/v1beta/models/gemini-2.0-flash:generateContent', baseUrl);
+const url = new URL('gemini/v1beta/models/gemini-2.5-pro:generateContent', baseUrl);
 url.searchParams.set('key', apiKey);
 
 console.log("Fetching from", url.toString());
