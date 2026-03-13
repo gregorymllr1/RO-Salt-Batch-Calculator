@@ -435,7 +435,8 @@
                     required: ["recipeName", "composition"]
                 };
 
-                const systemInstruction = `You are a professional water chemist. The user will ask for a specific water profile (e.g., seawater, tap water, high scaling water). Create a reasonable chemical recipe using ONLY the salts provided in the schema. Do not output anything outside the JSON. All concentrations must be in ppm (mg/L).`;
+                const saltList = Object.keys(saltDb).join(', ');
+                const systemInstruction = `You are a professional water chemist. Create a reasonable chemical recipe for the requested water profile using ONLY these available salts: ${saltList}. All concentrations must be in ppm (mg/L). Respond with ONLY valid JSON in this exact format, no other text: {"recipeName": "A descriptive name", "composition": {"NaCl": 500.0, "MgSO4": 200.0}}. Only include salts that are needed (non-zero concentrations).`;
                 const prompt = `Generate a water profile for: ${promptInput}`;
 
                 const jsonStr = await fetchGROQ(prompt, systemInstruction, schema);
