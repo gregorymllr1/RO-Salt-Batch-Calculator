@@ -356,12 +356,13 @@
         let activePresets = { ...defaultPresets };
 
         // --- GROQ API CONFIGURATION ---
-        const GROQ_API_KEY = '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';
+        // API key is stored securely in the Cloudflare Worker (not here).
+        const GROQ_PROXY_URL = 'https://groq-proxy.gregorymllr1.workers.dev';
         const GROQ_MODEL = 'openai/gpt-oss-120b';
 
         // --- GROQ API HELPERS ---
         async function fetchGROQ(prompt, systemInstruction = "", schema = null) {
-            const url = 'https://api.groq.com/openai/v1/chat/completions';
+            const url = GROQ_PROXY_URL;
             const messages = [];
             if (systemInstruction) {
                 let sysContent = systemInstruction;
@@ -383,8 +384,7 @@
                     const response = await fetch(url, {
                         method: 'POST',
                         headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${GROQ_API_KEY}`
+                            'Content-Type': 'application/json'
                         },
                         body: JSON.stringify(payload)
                     });
