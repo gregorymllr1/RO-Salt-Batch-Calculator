@@ -1227,6 +1227,7 @@ function renderBarChart(results) {
         <div class="w-full border-t border-slate-700/50"></div>
         <div class="w-full border-t border-slate-700/50"></div>
         <div class="w-full border-t border-slate-700/50"></div>
+        <div class="w-full border-t border-slate-600"></div>
       </div>
       <div class="absolute inset-0 flex items-center justify-center pb-7">
         <span class="text-xs text-slate-600 italic">Run a calculation to see cost breakdown.</span>
