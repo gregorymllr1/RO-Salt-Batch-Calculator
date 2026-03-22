@@ -1,0 +1,1427 @@
+# RO Salt Batch Calculator — Skin System & Dashboard Layout
+
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+
+**Goal:** Rebuild `index.html` with the two-column dashboard layout and a CSS-variable-based skin switcher that toggles between "Original" (teal/indigo) and "Electric Blue" (sky-blue neon) themes.
+
+**Architecture:** All color tokens are defined as CSS custom properties per `[data-theme]`; Tailwind is configured with variable-backed named tokens so utility classes like `bg-panel`, `text-accent` resolve to the active skin automatically. A skin-switcher `<select>` in the header writes `data-theme` to `<html>` and persists the choice in `localStorage`. Two CSS-only charts (donut via `conic-gradient`, bar via proportional `height`) are rendered by JS after each calculation.
+
+**Tech Stack:** Vanilla HTML/CSS/JS, Tailwind CDN (v3), CSS Custom Properties, `conic-gradient`, `localStorage`, Groq proxy (existing)
+
+**Spec:** `docs/superpowers/specs/2026-03-22-skin-system-design.md`
+
+---
+
+## File Map
+
+| File | Action | Responsibility |
+|------|--------|---------------|
+| `index.html` | **Full rebuild** | Everything — layout, skin system, all JS |
+
+---
+
+## Reference: Skin Token Values
+
+```
+ORIGINAL (teal):
+  --color-bg:                #0B1120
+  --color-panel:             rgba(30,41,59,0.8)
+  --color-panel-light:       #334155
+  --color-accent:            #14b8a6
+  --color-accent-secondary:  #818cf8
+  --color-border:            rgba(20,184,166,0.3)
+  --color-text:              #f8fafc
+  --color-text-muted:        #94a3b8
+  --shadow-glow:                   0 0 15px rgba(20,184,166,0.15), inset 0 0 10px rgba(20,184,166,0.1)
+  --color-btn-calculate-from:      #14b8a6
+  --color-btn-calculate-to:        #0d9488
+  --shadow-btn-calculate:          0 0 20px rgba(20,184,166,0.4)
+
+ELECTRIC-BLUE (sky):
+  --color-bg:                #0f172a
+  --color-panel:             rgba(30,41,59,0.8)
+  --color-panel-light:       #334155
+  --color-accent:            #38bdf8
+  --color-accent-secondary:  #0ea5e9
+  --color-border:            rgba(56,189,248,0.4)
+  --color-text:              #f8fafc
+  --color-text-muted:        #94a3b8
+  --shadow-glow:                   0 0 15px rgba(14,165,233,0.15), inset 0 0 10px rgba(14,165,233,0.1)
+  --color-btn-calculate-from:      #22d3ee
+  --color-btn-calculate-to:        #3b82f6
+  --shadow-btn-calculate:          0 0 20px rgba(6,182,212,0.6)
+```
+
+## Reference: Stable Element IDs (must not change)
+
+`volumeInput`, `tempInput`, `aiPromptInput`, `btnGenerateAI`, `statusBanner`, `statusIcon`, `statusText`, `skinSelect`, `saltMatrix`, `presetDropdown`, `btnSaveInit`, `saveRow`, `saveNameInput`, `sumMass`, `sumCost`, `sumPiAtm`, `sumPiPsi`, `hydrateNote`, `resultsTableBody`, `btnAnalyzeBatch`, `resultsEmptyState`, `aiAnalysisPanel`, `aiAnalysisText`, `aiLoadingIndicator`, `pricePanel`, `priceChevron`, `priceTableBody`, `lastPriceUpdate`
+
+New chart IDs: `donutChart`, `donutLegend`, `donutCenter`, `barChart`
+
+> **Note:** The spec's ID contract table lists 8 core IDs. This plan expands that to all static IDs in the rebuilt HTML (including dynamic render targets that are static elements). The plan's list above is authoritative for this implementation.
+
+---
+
+## Task 1: Write the `<head>` — skin system foundation
+
+**Files:**
+- Modify: `index.html` (write from scratch)
+
+This task produces a valid HTML file with correct head section. Body is a placeholder `<p>Work in progress</p>`.
+
+- [ ] **Step 1: Write the complete `<head>` block**
+
+Replace the entire `index.html` with this foundation (body is placeholder — JS and full body come in later tasks):
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RO Salt Batch Calculator</title>
+
+  <!-- FOUC prevention: set data-theme from localStorage before first paint -->
+  <script>
+    (function () {
+      var VALID = ['electric-blue', 'original'];
+      var stored = localStorage.getItem('skin');
+      var skin = VALID.indexOf(stored) !== -1 ? stored : 'electric-blue';
+      if (VALID.indexOf(stored) === -1) localStorage.setItem('skin', 'electric-blue');
+      document.documentElement.setAttribute('data-theme', skin);
+    })();
+  </script>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            bg:                 'var(--color-bg)',
+            panel:              'var(--color-panel)',
+            'panel-light':      'var(--color-panel-light)',
+            accent:             'var(--color-accent)',
+            'accent-secondary': 'var(--color-accent-secondary)',
+            'panel-border':     'var(--color-border)',
+            text:               'var(--color-text)',
+            'text-muted':       'var(--color-text-muted)',
+            // Keep semantic utility colors for status banners (unchanged across skins)
+            brand:    '#14b8a6',
+            success:  '#34d399',
+            danger:   '#f87171',
+            warning:  '#fbbf24',
+            secondary: '#818cf8',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* === SKIN TOKENS === */
+    [data-theme="original"] {
+      --color-bg:               #0B1120;
+      --color-panel:            rgba(30, 41, 59, 0.8);
+      --color-panel-light:      #334155;
+      --color-accent:           #14b8a6;
+      --color-accent-secondary: #818cf8;
+      --color-border:           rgba(20, 184, 166, 0.3);
+      --color-text:             #f8fafc;
+      --color-text-muted:       #94a3b8;
+      --shadow-glow:                0 0 15px rgba(20, 184, 166, 0.15), inset 0 0 10px rgba(20, 184, 166, 0.1);
+      --color-btn-calculate-from:   #14b8a6;
+      --color-btn-calculate-to:     #0d9488;
+      --shadow-btn-calculate:       0 0 20px rgba(20, 184, 166, 0.4);
+    }
+
+    [data-theme="electric-blue"] {
+      --color-bg:               #0f172a;
+      --color-panel:            rgba(30, 41, 59, 0.8);
+      --color-panel-light:      #334155;
+      --color-accent:           #38bdf8;
+      --color-accent-secondary: #0ea5e9;
+      --color-border:           rgba(56, 189, 248, 0.4);
+      --color-text:             #f8fafc;
+      --color-text-muted:       #94a3b8;
+      --shadow-glow:                0 0 15px rgba(14, 165, 233, 0.15), inset 0 0 10px rgba(14, 165, 233, 0.1);
+      --color-btn-calculate-from:   #22d3ee;
+      --color-btn-calculate-to:     #3b82f6;
+      --shadow-btn-calculate:       0 0 20px rgba(6, 182, 212, 0.6);
+    }
+
+    /* === SEMANTIC CLASSES === */
+    body { background-color: var(--color-bg); color: var(--color-text); }
+
+    .neon-panel {
+      border: 1px solid var(--color-border);
+      border-radius: 0.75rem;
+      background-color: var(--color-panel);
+      box-shadow: var(--shadow-glow);
+      backdrop-filter: blur(8px);
+    }
+
+    .calculate-btn {
+      background: linear-gradient(to bottom, var(--color-btn-calculate-from), var(--color-btn-calculate-to));
+      box-shadow: var(--shadow-btn-calculate);
+      border: 1px solid var(--color-accent);
+    }
+    .calculate-btn:hover {
+      filter: brightness(1.1);
+    }
+
+    /* Skin select styling */
+    .skin-select {
+      background-color: var(--color-panel-light);
+      border: 1px solid var(--color-border);
+      color: var(--color-text);
+      border-radius: 0.5rem;
+      padding: 0.35rem 0.75rem;
+      font-size: 0.75rem;
+      font-weight: 600;
+      outline: none;
+      cursor: pointer;
+    }
+    .skin-select:focus { box-shadow: 0 0 0 2px var(--color-accent); }
+
+    /* Custom scrollbar */
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: #0f172a; border-radius: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #475569; }
+
+    /* AI gradient text */
+    .ai-gradient-text {
+      background: linear-gradient(to right, #34d399, #818cf8, #14b8a6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Donut chart */
+    .donut-ring {
+      border-radius: 50%;
+      position: relative;
+    }
+    .donut-ring::after {
+      content: '';
+      position: absolute;
+      inset: 22%;
+      background: var(--color-bg);
+      border-radius: 50%;
+    }
+
+    /* Bar chart */
+    .bar-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+      flex: 1;
+      min-width: 0;
+      position: relative;  /* required: anchors the absolute-positioned bar label */
+    }
+    .bar-fill {
+      width: 100%;
+      max-width: 28px;
+      background-color: var(--color-accent);
+      border-radius: 3px 3px 0 0;
+      transition: height 0.4s ease;
+    }
+
+  </style>
+</head>
+<body class="min-h-screen font-sans antialiased">
+  <p class="text-white p-8">Work in progress — Task 1 complete.</p>
+</body>
+</html>
+```
+
+- [ ] **Step 2: Open in browser, verify skin system works**
+
+Open `index.html` in a browser. Check:
+- Background is dark (`#0f172a` electric-blue default)
+- Open browser DevTools → Console → run `localStorage.setItem('skin','original')` → reload → background is `#0B1120` (slightly different dark)
+- Run `localStorage.setItem('skin','electric-blue')` → reload → back to electric-blue
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add index.html
+git commit -m "feat: add CSS variable skin system and head block"
+```
+
+---
+
+## Task 2: Build the HTML body structure
+
+**Files:**
+- Modify: `index.html` (replace placeholder body)
+
+This task writes the complete HTML skeleton. All IDs are in place. JS is still absent (added in Task 4+).
+
+- [ ] **Step 1: Replace the `<body>` placeholder with the full dashboard structure**
+
+Replace everything between `<body ...>` and `</body>` with:
+
+```html
+<body class="min-h-screen font-sans antialiased">
+
+  <!-- Status banner (floating, fixed) -->
+  <div id="statusBanner" class="hidden fixed top-5 left-1/2 -translate-x-1/2 p-4 rounded-xl border flex items-center gap-3 z-50 shadow-2xl backdrop-blur-md transition-all duration-300">
+    <span id="statusIcon"></span>
+    <span id="statusText" class="font-medium text-sm"></span>
+  </div>
+
+  <!-- Page wrapper -->
+  <div class="max-w-6xl mx-auto px-4 py-6 flex flex-col gap-6">
+
+    <!-- ═══════════════ HEADER ═══════════════ -->
+    <header class="flex items-center gap-4">
+      <div class="w-11 h-11 rounded-lg neon-panel flex items-center justify-center flex-shrink-0">
+        <svg class="h-6 w-6 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+        </svg>
+      </div>
+      <div>
+        <h1 class="text-xl font-extrabold text-white tracking-tight">RO Salt Batch Calculator</h1>
+        <p class="text-xs text-text-muted mt-0.5">Build batch recipes, calculate mass, cost, and osmotic pressure.</p>
+      </div>
+      <div class="ml-auto flex items-center gap-2">
+        <label class="text-xs text-text-muted font-semibold uppercase tracking-wider">Skin</label>
+        <select id="skinSelect" class="skin-select">
+          <option value="electric-blue">Electric Blue</option>
+          <option value="original">Original</option>
+        </select>
+      </div>
+    </header>
+
+    <!-- ═══════════════ TWO-COLUMN MAIN ═══════════════ -->
+    <main class="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
+
+      <!-- ─────────── LEFT COLUMN ─────────── -->
+      <div class="flex flex-col gap-6">
+
+        <!-- § Batch Summary (4 stat cards) -->
+        <section class="neon-panel p-5">
+          <h2 class="text-xs font-semibold text-text-muted tracking-wider uppercase mb-4">Batch Summary</h2>
+          <div class="grid grid-cols-2 gap-3">
+            <div class="bg-panel-light/40 rounded-lg p-4 flex flex-col gap-1">
+              <span class="text-xs text-text-muted font-medium">Total Mass</span>
+              <div class="flex items-baseline gap-1">
+                <span id="sumMass" class="text-2xl font-bold text-white">0.000</span>
+                <span class="text-sm text-text-muted">g</span>
+              </div>
+            </div>
+            <div class="bg-panel-light/40 rounded-lg p-4 flex flex-col gap-1">
+              <span class="text-xs text-text-muted font-medium">Estimated Cost</span>
+              <div class="flex items-baseline gap-1">
+                <span class="text-2xl font-bold text-white">$</span><span id="sumCost" class="text-2xl font-bold text-white">0.00</span>
+              </div>
+            </div>
+            <div class="bg-panel-light/40 rounded-lg p-4 flex flex-col gap-1">
+              <span class="text-xs text-text-muted font-medium">Osmotic (atm)</span>
+              <span id="sumPiAtm" class="text-xl font-bold text-white">0.0000</span>
+            </div>
+            <div class="bg-panel-light/40 rounded-lg p-4 flex flex-col gap-1">
+              <span class="text-xs text-text-muted font-medium">Osmotic (psi)</span>
+              <span id="sumPiPsi" class="text-xl font-bold text-white">0.00</span>
+            </div>
+          </div>
+          <div id="hydrateNote" class="hidden mt-3 text-xs text-accent/80 flex items-center gap-1.5 bg-accent/5 border border-accent/20 p-2 rounded-lg">
+            <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            Mass to Weigh values automatically account for hydrate forms where applicable.
+          </div>
+        </section>
+
+        <!-- § 1. Global Parameters -->
+        <section class="neon-panel p-5">
+          <h2 class="text-xs font-semibold text-text-muted tracking-wider uppercase mb-4">1. Global Parameters</h2>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-slate-300 mb-1.5">Batch volume (L)</label>
+              <input type="number" id="volumeInput" value="10.0" min="0.1" step="0.5"
+                class="w-full p-2.5 bg-[#0f172a] border border-slate-700 text-white rounded-xl focus:ring-2 focus:ring-accent focus:border-accent transition-all outline-none">
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-slate-300 mb-1.5">Temperature (°C)</label>
+              <input type="number" id="tempInput" value="25.0" min="-10" step="0.5"
+                class="w-full p-2.5 bg-[#0f172a] border border-slate-700 text-white rounded-xl focus:ring-2 focus:ring-accent focus:border-accent transition-all outline-none">
+            </div>
+          </div>
+        </section>
+
+        <!-- § 2. Composition Presets -->
+        <section class="neon-panel p-5 flex flex-col gap-4">
+          <h2 class="text-xs font-semibold text-text-muted tracking-wider uppercase">2. Composition Presets</h2>
+
+          <!-- AI Recipe Generator -->
+          <div class="border border-accent-secondary/30 bg-accent-secondary/5 rounded-lg p-4 flex flex-col gap-3">
+            <div class="flex items-center gap-2 text-accent-secondary font-semibold text-xs uppercase tracking-wider">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+              AI Recipe Generator
+            </div>
+            <div class="flex gap-2">
+              <input type="text" id="aiPromptInput" placeholder="e.g., Baltic Sea water profile..."
+                class="flex-1 p-2 bg-[#0B1120] text-sm text-white border border-slate-700 rounded-lg focus:border-accent-secondary focus:ring-1 focus:ring-accent-secondary outline-none transition-colors">
+              <button id="btnGenerateAI" onclick="generateRecipeAI()"
+                class="bg-accent-secondary hover:brightness-110 text-white px-3 py-2 rounded-lg text-sm font-bold transition-all flex items-center gap-1 whitespace-nowrap"
+                style="box-shadow: 0 0 10px rgba(99,102,241,0.4)">
+                Generate ✨
+              </button>
+            </div>
+          </div>
+
+          <!-- Saved Presets -->
+          <div class="flex flex-col gap-2">
+            <label class="text-sm text-text-muted">Saved Presets</label>
+            <select id="presetDropdown"
+              class="w-full p-2.5 bg-[#0f172a] border border-slate-700 text-white rounded-xl focus:ring-2 focus:ring-accent focus:border-accent outline-none appearance-none">
+              <option value="Manual">Manual (no preset)</option>
+            </select>
+            <div class="grid grid-cols-2 gap-3 mt-1">
+              <button onclick="applyPreset()"
+                class="bg-panel-light/80 hover:bg-panel-light border border-slate-600 text-white text-sm font-semibold py-2 rounded-lg transition-colors">Apply</button>
+              <button id="btnSaveInit" onclick="toggleSaveRow()" disabled
+                class="bg-panel border border-slate-600 text-text-muted hover:text-white text-sm font-medium py-2 rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
+                <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4"></path></svg>
+                Save
+              </button>
+            </div>
+            <div id="saveRow" class="hidden bg-[#0f172a] p-3.5 rounded-xl border border-slate-700 flex gap-2 mt-1">
+              <input type="text" id="saveNameInput" placeholder="Enter custom name..."
+                class="flex-1 p-2 bg-transparent text-sm text-white border-b border-slate-600 focus:border-accent focus:ring-0 outline-none transition-colors">
+              <button onclick="confirmSavePreset()"
+                class="bg-success hover:bg-emerald-500 text-slate-900 px-4 py-1.5 rounded-lg text-sm font-bold transition-colors">Save</button>
+              <button onclick="toggleSaveRow(false)"
+                class="bg-panel hover:bg-panel-light text-slate-300 border border-slate-600 px-4 py-1.5 rounded-lg text-sm font-medium transition-colors">Cancel</button>
+            </div>
+          </div>
+        </section>
+
+        <!-- § 3. Salt Matrix -->
+        <section class="neon-panel flex flex-col overflow-hidden" style="max-height: 420px;">
+          <div class="p-4 border-b border-slate-700/60 flex justify-between items-center bg-panel-light/30">
+            <h2 class="text-xs font-semibold text-text-muted tracking-wider uppercase">3. Salt Matrix</h2>
+            <span class="text-xs text-accent font-semibold bg-accent/10 px-2.5 py-1 rounded-full border border-accent/20">Target PPM</span>
+          </div>
+          <div id="saltMatrix" class="p-3 overflow-y-auto custom-scrollbar flex-1 space-y-1">
+            <!-- Populated by JS -->
+          </div>
+        </section>
+
+        <!-- § Actions -->
+        <section class="neon-panel p-5 flex flex-col gap-4 relative overflow-hidden">
+          <div class="absolute inset-0 bg-gradient-to-t from-accent/5 to-transparent pointer-events-none rounded-xl"></div>
+          <button onclick="calculateBatch()"
+            class="calculate-btn w-full text-white font-bold py-4 rounded-xl text-lg transition-all transform hover:scale-[1.01] flex items-center justify-center gap-2 relative z-10">
+            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+            Calculate Batch
+          </button>
+          <div class="grid grid-cols-2 gap-3 relative z-10">
+            <button onclick="resetApp()"
+              class="bg-panel border border-slate-600 text-slate-300 hover:text-white text-sm font-medium py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+              Reset
+            </button>
+            <button onclick="exportBatchCSV()"
+              class="bg-panel border border-slate-600 text-slate-300 hover:text-white text-sm font-medium py-2.5 rounded-lg transition-colors flex items-center justify-center gap-2">
+              <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+              Export Batch CSV
+            </button>
+          </div>
+        </section>
+
+      </div><!-- /LEFT COLUMN -->
+
+      <!-- ─────────── RIGHT COLUMN ─────────── -->
+      <div class="flex flex-col gap-6">
+
+        <!-- § Salt Mass Contribution — Donut Chart -->
+        <section class="neon-panel p-5">
+          <h2 class="text-sm font-semibold text-white mb-5">Salt Mass Contribution (%)</h2>
+          <div class="flex items-center gap-6">
+            <!-- Chart -->
+            <div class="relative flex-shrink-0 w-40 h-40">
+              <div id="donutChart" class="donut-ring w-40 h-40" style="background: conic-gradient(#475569 0% 100%)"></div>
+              <div class="absolute inset-0 flex items-center justify-center">
+                <div class="text-center z-10" style="pointer-events:none">
+                  <span id="donutCenter" class="text-xs text-text-muted">No data</span>
+                </div>
+              </div>
+            </div>
+            <!-- Legend -->
+            <div id="donutLegend" class="flex flex-col gap-1.5 text-xs text-text-muted flex-1 min-w-0">
+              <span class="italic">Run a calculation to see chart.</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- § Detailed Composition Table -->
+        <section class="neon-panel p-5 flex flex-col gap-4 overflow-hidden">
+          <div class="flex justify-between items-center">
+            <h2 class="text-xs font-semibold text-text-muted tracking-wider uppercase">Detailed Composition</h2>
+            <div class="flex items-center gap-2">
+              <button id="btnAnalyzeBatch" onclick="analyzeBatchAI()" disabled
+                class="hidden bg-gradient-to-r from-emerald-500 to-accent hover:brightness-110 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition-all flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                Analyze ✨
+              </button>
+              <span id="resultsEmptyState" class="text-xs text-slate-500 italic">No batch calculated yet</span>
+            </div>
+          </div>
+
+          <!-- AI Analysis Panel -->
+          <div id="aiAnalysisPanel" class="hidden bg-[#0B1120]/80 border border-slate-700 rounded-lg p-4">
+            <h3 class="text-xs font-bold ai-gradient-text uppercase tracking-widest mb-2 flex items-center gap-2">
+              AI Chemistry Insight
+              <div id="aiLoadingIndicator" class="hidden w-3 h-3 rounded-full bg-accent animate-pulse"></div>
+            </h3>
+            <p id="aiAnalysisText" class="text-sm text-slate-300 leading-relaxed italic">Generating analysis...</p>
+          </div>
+
+          <div class="overflow-x-auto custom-scrollbar">
+            <table class="w-full text-left border-collapse">
+              <thead>
+                <tr class="text-[10px] text-text-muted border-b border-slate-700 uppercase tracking-wider">
+                  <th class="py-2 font-semibold">Salt</th>
+                  <th class="py-2 font-semibold text-right">Target<br>(ppm)</th>
+                  <th class="py-2 font-semibold text-right">Mass to<br>Weigh (g)</th>
+                  <th class="py-2 font-semibold text-right">Est.<br>Cost</th>
+                  <th class="py-2 font-semibold text-right">π Contrib.<br>(atm)</th>
+                </tr>
+              </thead>
+              <tbody id="resultsTableBody" class="text-sm text-slate-300 divide-y divide-slate-800">
+                <tr><td colspan="5" class="py-8 text-center text-slate-500 italic text-xs">Run a calculation to see detailed breakdown.</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- § Price Breakdown — Bar Chart -->
+        <section class="neon-panel p-5 flex flex-col gap-4">
+          <h2 class="text-xs font-semibold text-text-muted tracking-wider uppercase">Price Breakdown</h2>
+          <div id="barChart" class="h-52 flex items-end gap-1 pb-7 relative">
+            <div class="absolute inset-0 flex flex-col justify-between pb-7 pointer-events-none">
+              <div class="w-full border-t border-slate-700/50"></div>
+              <div class="w-full border-t border-slate-700/50"></div>
+              <div class="w-full border-t border-slate-700/50"></div>
+              <div class="w-full border-t border-slate-700/50"></div>
+              <div class="w-full border-t border-slate-700/50"></div>
+              <div class="w-full border-t border-slate-600"></div>
+            </div>
+            <div class="absolute inset-0 flex items-center justify-center pb-7">
+              <span class="text-xs text-slate-600 italic">Run a calculation to see cost breakdown.</span>
+            </div>
+          </div>
+        </section>
+
+      </div><!-- /RIGHT COLUMN -->
+
+    </main><!-- /TWO-COLUMN -->
+
+    <!-- ═══════════════ FULL-WIDTH FOOTER ═══════════════ -->
+    <section class="neon-panel overflow-hidden mb-8">
+      <button onclick="togglePrices()" class="w-full p-4 flex justify-between items-center hover:bg-white/5 transition-colors focus:outline-none">
+        <div class="flex items-center gap-3">
+          <div class="p-1.5 bg-panel-light rounded border border-slate-700">
+            <svg class="w-4 h-4 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          </div>
+          <span class="text-xs font-semibold text-text-muted tracking-wider uppercase">Market &amp; Pricing Data</span>
+        </div>
+        <svg id="priceChevron" class="w-5 h-5 text-slate-500 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+      </button>
+      <div id="pricePanel" class="hidden border-t border-slate-700/60">
+        <div class="p-5 space-y-5">
+          <div class="flex flex-wrap gap-3">
+            <button onclick="updatePrices()"
+              class="bg-warning/10 border border-warning/20 hover:bg-warning/20 text-warning text-sm py-2 px-4 rounded-xl transition-colors flex items-center gap-1.5 font-medium">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+              Update to Lowest Quotes
+            </button>
+            <button onclick="restoreDefaultPrices()"
+              class="bg-panel hover:bg-panel-light text-slate-300 text-sm py-2 px-4 border border-slate-600 rounded-xl transition-colors font-medium">
+              Restore Defaults
+            </button>
+            <button onclick="exportPricesCSV()"
+              class="bg-panel hover:bg-panel-light text-slate-300 text-sm py-2 px-4 border border-slate-600 rounded-xl transition-colors ml-auto font-medium">
+              Export Prices CSV
+            </button>
+          </div>
+          <div class="text-xs text-slate-500">
+            Last update: <strong id="lastPriceUpdate" class="text-slate-300">Not updated in this session</strong>
+          </div>
+          <div class="overflow-x-auto max-h-64 custom-scrollbar border border-slate-700/50 rounded-xl bg-[#0f172a]/50">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead class="sticky top-0 bg-panel z-10">
+                <tr>
+                  <th class="p-3 font-semibold text-slate-300 border-b border-slate-700">Salt</th>
+                  <th class="p-3 font-semibold text-slate-300 border-b border-slate-700 text-right">$/g</th>
+                  <th class="p-3 font-semibold text-slate-300 border-b border-slate-700">Current Source</th>
+                </tr>
+              </thead>
+              <tbody id="priceTableBody" class="divide-y divide-slate-700/50">
+                <!-- Rendered by JS -->
+              </tbody>
+            </table>
+          </div>
+          <p class="text-xs text-warning/80 italic">Note: "Update to Lowest Quotes" picks the cheapest per-gram option from the local cache.</p>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /page wrapper -->
+
+  <script>
+    // JavaScript goes here — added in Tasks 3–7
+  </script>
+</body>
+```
+
+- [ ] **Step 2: Open in browser, verify layout**
+
+Open `index.html`. Check:
+- Header shows title + icon + "Skin" dropdown
+- Left column: Batch Summary (4 stat cards visible), Global Params inputs, Composition Presets section, Salt Matrix section (empty), Actions (Calculate, Reset, Export buttons)
+- Right column: Donut placeholder, Detailed Composition table header + placeholder row, Price Breakdown placeholder
+- Footer: "Market & Pricing Data" collapsible (click it — it expands)
+- Switch skin dropdown from "Electric Blue" to "Original" — nothing visible yet (JS not wired)
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add index.html
+git commit -m "feat: add dashboard layout HTML structure"
+```
+
+---
+
+## Task 3: Add core data, constants, and utility JS
+
+**Files:**
+- Modify: `index.html` (fill in the `<script>` block)
+
+Replace the `// JavaScript goes here` comment with the following. This task covers only the data layer and pure utilities — no DOM interaction yet.
+
+- [ ] **Step 1: Add data constants and utilities inside `<script>`**
+
+```javascript
+// ─── CONSTANTS ───────────────────────────────────────────────
+const R_GAS = 0.082057;
+const GROQ_PROXY_URL = 'https://groq-proxy.gregorymllr1.workers.dev';
+// Model ID is remapped by the Cloudflare Worker proxy — do not change without updating the worker
+const GROQ_MODEL = 'openai/gpt-oss-120b';
+const VALID_SKINS = ['electric-blue', 'original'];
+
+let lastPriceUpdate = 'Not updated in this session';
+let lastBatchResults = [];
+let totalOsmoticPressureGlobal = 0;
+let statusTimeout;
+
+// ─── SALT DATABASE ────────────────────────────────────────────
+const saltDb = {
+  'NaCl':       { MW_anhydrous: 58.44,  MW_hydrate: 58.44,  i: 2, price_per_g: 0.00212, price_source: 'McMaster Carr, 5 kg, $10.60 (table default)' },
+  'Na2SO4':     { MW_anhydrous: 142.04, MW_hydrate: 142.04, i: 3, price_per_g: 0.0764,  price_source: 'Sigma 239313-5KG, 5 kg, $382 (table default)' },
+  'MgSO4':      { MW_anhydrous: 120.37, MW_hydrate: 246.47, i: 2, price_per_g: 0.0806,  price_source: 'Sigma M1880-5KG (MgSO4·7H2O), 5 kg, $403 (table default)' },
+  'MgCl2·6H2O': { MW_anhydrous: 95.21,  MW_hydrate: 203.30, i: 3, price_per_g: 0.01455, price_source: '$33 / 2.268 kg (table default)' },
+  'CaCl2·2H2O': { MW_anhydrous: 110.98, MW_hydrate: 147.01, i: 3, price_per_g: 0.1792,  price_source: 'Sigma 223506-2.5KG, 2.5 kg, $448 (table default)' },
+  'SrCl2·6H2O': { MW_anhydrous: 158.53, MW_hydrate: 266.62, i: 3, price_per_g: 0.454,   price_source: 'Sigma 255521-500G, 500 g, $227 (table default)' },
+  'KCl':        { MW_anhydrous: 74.55,  MW_hydrate: 74.55,  i: 2, price_per_g: 0.024,   price_source: '$12 / 500 g (table default)' },
+  'NaHCO3':     { MW_anhydrous: 84.01,  MW_hydrate: 84.01,  i: 2, price_per_g: 0.0496,  price_source: 'Sigma S6014-5KG, 5 kg, $248 (table default)' },
+  'KBr':        { MW_anhydrous: 119.00, MW_hydrate: 119.00, i: 2, price_per_g: 0.256,   price_source: 'Sigma 243418-500G, 500 g, $128 (table default)' },
+  'H3BO3':      { MW_anhydrous: 61.83,  MW_hydrate: 61.83,  i: 1, price_per_g: 0.1268,  price_source: 'Sigma B0394-5KG, 5 kg, $634 (table default)' },
+  'NaF':        { MW_anhydrous: 41.99,  MW_hydrate: 41.99,  i: 2, price_per_g: 0.33,    price_source: 'Sigma 201154-500G, 500 g, $165 (table default)' },
+  'Ba(NO3)2':   { MW_anhydrous: 261.34, MW_hydrate: 261.34, i: 3, price_per_g: 0.4,     price_source: 'Sigma 217581-500G, 500 g, $200 (table default)' },
+};
+
+const defaultPriceMemory = JSON.parse(JSON.stringify(saltDb));
+
+const supplierQuotes = {
+  'NaCl':       [{ supplier: 'McMaster Carr', catalog: '',              pack_kg: 5.0,   price_usd: 10.60 }],
+  'Na2SO4':     [{ supplier: 'Sigma',         catalog: '239313-5KG',   pack_kg: 5.0,   price_usd: 382.0 }],
+  'MgSO4':      [{ supplier: 'Sigma',         catalog: 'M1880-5KG',    pack_kg: 5.0,   price_usd: 403.0 }],
+  'MgCl2·6H2O': [{ supplier: '',              catalog: '',              pack_kg: 2.268, price_usd: 33.0  }],
+  'CaCl2·2H2O': [{ supplier: 'Sigma',         catalog: '223506-2.5KG', pack_kg: 2.5,   price_usd: 448.0 }],
+  'SrCl2·6H2O': [{ supplier: 'Sigma',         catalog: '255521-500G',  pack_kg: 0.5,   price_usd: 227.0 }],
+  'KCl':        [{ supplier: '',              catalog: '',              pack_kg: 0.5,   price_usd: 12.0  }],
+  'NaHCO3':     [{ supplier: 'Sigma',         catalog: 'S6014-5KG',    pack_kg: 5.0,   price_usd: 248.0 }],
+  'KBr':        [{ supplier: 'Sigma',         catalog: '243418-500G',  pack_kg: 0.5,   price_usd: 128.0 }],
+  'H3BO3':      [{ supplier: 'Sigma',         catalog: 'B0394-5KG',    pack_kg: 5.0,   price_usd: 634.0 }],
+  'NaF':        [{ supplier: 'Sigma',         catalog: '201154-500G',  pack_kg: 0.5,   price_usd: 165.0 }],
+  'Ba(NO3)2':   [{ supplier: 'Sigma',         catalog: '217581-500G',  pack_kg: 0.5,   price_usd: 200.0 }],
+};
+
+const defaultPresets = {
+  '2000 ppm NaCl':   { 'NaCl': 2000.0 },
+  '2000 ppm MgSO4':  { 'MgSO4': 2000.0 },
+  'Poseidon Sea Salt': {
+    'MgCl2·6H2O': 5200.0, 'CaCl2·2H2O': 1160.0, 'SrCl2·6H2O': 25.0,
+    'KCl': 695.0, 'NaHCO3': 201.0, 'KBr': 101.0, 'H3BO3': 27.0,
+    'NaF': 3.0, 'NaCl': 24530.0, 'Na2SO4': 4090.0, 'Ba(NO3)2': 0.0994,
+  }
+};
+
+let activePresets = { ...defaultPresets };
+
+// ─── PURE UTILITIES ───────────────────────────────────────────
+function quotePerG(quote) {
+  return quote.price_usd / (quote.pack_kg * 1000.0);
+}
+
+function getTimestamp() {
+  const d = new Date();
+  return `${d.getFullYear()}${(d.getMonth()+1).toString().padStart(2,'0')}${d.getDate().toString().padStart(2,'0')}_${d.getHours().toString().padStart(2,'0')}${d.getMinutes().toString().padStart(2,'0')}`;
+}
+
+function downloadCSV(content, filename) {
+  const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+  const link = document.createElement('a');
+  link.setAttribute('href', URL.createObjectURL(blob));
+  link.setAttribute('download', filename);
+  link.style.visibility = 'hidden';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+// ─── GROQ API ─────────────────────────────────────────────────
+async function fetchGROQ(prompt, systemInstruction = '', schema = null) {
+  const messages = [];
+  if (systemInstruction) {
+    let sysContent = systemInstruction;
+    if (schema) sysContent += '\n\nRespond ONLY with valid JSON. Do not include any text outside the JSON object.';
+    messages.push({ role: 'system', content: sysContent });
+  }
+  messages.push({ role: 'user', content: prompt });
+
+  const payload = { model: GROQ_MODEL, messages };
+  if (schema) payload.response_format = { type: 'json_object' };
+
+  const delays = [1000, 2000, 4000, 8000, 16000];
+  for (let i = 0; i < 6; i++) {
+    try {
+      const response = await fetch(GROQ_PROXY_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      if (!response.ok) throw new Error(`API Error: ${response.status} - ${await response.text()}`);
+      const data = await response.json();
+      return data.choices[0].message.content;
+    } catch (error) {
+      if (i === 5) throw error;
+      await new Promise(r => setTimeout(r, delays[i]));
+    }
+  }
+}
+```
+
+- [ ] **Step 2: Open browser DevTools console, verify no errors**
+
+Open `index.html`. Open DevTools console. Verify: no red errors. `saltDb` is accessible (type `saltDb` in console — should show the object).
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add index.html
+git commit -m "feat: add salt database, presets, and utility functions"
+```
+
+---
+
+## Task 4: Add skin switcher + app initialization
+
+**Files:**
+- Modify: `index.html` (append to `<script>` block)
+
+Add to the end of the script block (after the GROQ utilities from Task 3):
+
+- [ ] **Step 1: Add skin switcher, storage, UI builders**
+
+```javascript
+// ─── SKIN SWITCHER ────────────────────────────────────────────
+function applySkin(value) {
+  document.documentElement.setAttribute('data-theme', value);
+  localStorage.setItem('skin', value);
+}
+
+function initSkin() {
+  const stored = localStorage.getItem('skin');
+  const skin = VALID_SKINS.indexOf(stored) !== -1 ? stored : 'electric-blue';
+  if (VALID_SKINS.indexOf(stored) === -1) localStorage.setItem('skin', 'electric-blue');
+  document.documentElement.setAttribute('data-theme', skin);
+  document.getElementById('skinSelect').value = skin;
+  document.getElementById('skinSelect').addEventListener('change', function () {
+    applySkin(this.value);
+  });
+}
+
+// ─── BROWSER STORAGE ──────────────────────────────────────────
+function loadUserPresets() {
+  try {
+    const stored = localStorage.getItem('ro_salt_presets');
+    if (stored) activePresets = { ...defaultPresets, ...JSON.parse(stored) };
+  } catch (e) { console.error('Could not load presets', e); }
+}
+
+function saveUserPresetsToStorage() {
+  const toSave = {};
+  Object.keys(activePresets).forEach(key => {
+    if (!defaultPresets[key]) toSave[key] = activePresets[key];
+  });
+  localStorage.setItem('ro_salt_presets', JSON.stringify(toSave));
+}
+
+// ─── UI BUILDERS ──────────────────────────────────────────────
+function buildSaltMatrix() {
+  const container = document.getElementById('saltMatrix');
+  container.innerHTML = '';
+  Object.keys(saltDb).forEach(saltName => {
+    const row = document.createElement('div');
+    row.className = 'flex items-center gap-3 p-2.5 hover:bg-white/5 rounded-xl transition-colors group';
+    row.innerHTML = `
+      <label class="flex items-center gap-3 flex-1 cursor-pointer">
+        <input type="checkbox" id="chk_${saltName}"
+          class="w-4 h-4 rounded bg-slate-900 border-slate-600 focus:ring-offset-slate-900 cursor-pointer"
+          style="accent-color: var(--color-accent)"
+          onchange="toggleSaltRow('${saltName}')">
+        <span class="font-medium text-slate-300 group-hover:text-white transition-colors text-sm">${saltName}</span>
+      </label>
+      <input type="number" id="ppm_${saltName}" value="500" min="0" step="10" disabled
+        class="w-24 p-2 text-right bg-slate-900 text-white border border-slate-700 rounded-lg text-sm
+               focus:ring-2 focus:border-accent disabled:opacity-40 disabled:bg-slate-800 transition-all outline-none"
+        style="--tw-ring-color: var(--color-accent)">
+    `;
+    container.appendChild(row);
+  });
+}
+
+function populatePresetDropdown() {
+  const dropdown = document.getElementById('presetDropdown');
+  const currentValue = dropdown.value;
+  dropdown.innerHTML = '<option value="Manual">Manual (no preset)</option>';
+  Object.keys(activePresets).forEach(presetName => {
+    const opt = document.createElement('option');
+    opt.value = presetName;
+    opt.textContent = presetName;
+    dropdown.appendChild(opt);
+  });
+  dropdown.value = Object.keys(activePresets).includes(currentValue) ? currentValue : 'Manual';
+}
+
+function renderPriceTable() {
+  const tbody = document.getElementById('priceTableBody');
+  tbody.innerHTML = '';
+  Object.keys(saltDb).forEach(saltName => {
+    const props = saltDb[saltName];
+    const tr = document.createElement('tr');
+    tr.className = 'hover:bg-white/5 transition-colors';
+    tr.innerHTML = `
+      <td class="p-3 font-medium text-slate-300">${saltName}</td>
+      <td class="p-3 text-right text-accent font-semibold">$${props.price_per_g.toFixed(4)}</td>
+      <td class="p-3 text-slate-400">${props.price_source || 'N/A'}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+  document.getElementById('lastPriceUpdate').textContent = lastPriceUpdate;
+}
+
+// ─── APP INIT ─────────────────────────────────────────────────
+function initApp() {
+  initSkin();
+  loadUserPresets();
+  buildSaltMatrix();
+  populatePresetDropdown();
+  renderPriceTable();
+}
+
+window.addEventListener('DOMContentLoaded', initApp);
+```
+
+- [ ] **Step 2: Open browser, verify initialization**
+
+Open `index.html`. Check:
+- Salt matrix is populated with all 12 salts (NaCl through Ba(NO3)2)
+- Preset dropdown shows Manual + 3 default presets
+- Price table in footer shows all 12 salts with prices
+- Skin dropdown shows correct active skin
+- Switching skin dropdown changes border/accent colors immediately (neon panel borders change color)
+- Reload after switching — skin persists
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add index.html
+git commit -m "feat: add skin switcher and app initialization"
+```
+
+---
+
+## Task 5: Add interaction handlers
+
+**Files:**
+- Modify: `index.html` (append to `<script>` block)
+
+- [ ] **Step 1: Add all event handlers**
+
+Append after `initApp`:
+
+```javascript
+// ─── STATUS BANNER ────────────────────────────────────────────
+function showStatus(type, message) {
+  const banner = document.getElementById('statusBanner');
+  const icon = document.getElementById('statusIcon');
+  const text = document.getElementById('statusText');
+
+  banner.className = 'fixed top-5 left-1/2 -translate-x-1/2 p-4 rounded-xl border flex items-center gap-3 z-50 shadow-2xl backdrop-blur-md transition-all duration-300';
+  banner.classList.remove('hidden', 'opacity-0', 'pointer-events-none');
+
+  const configs = {
+    success: { cls: 'bg-success/10 border-success/20 text-success', icon: 'M5 13l4 4L19 7' },
+    error:   { cls: 'bg-danger/10  border-danger/20  text-danger',   icon: 'M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
+    warning: { cls: 'bg-warning/10 border-warning/20 text-warning',  icon: 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
+    info:    { cls: 'bg-accent/10  border-accent/20  text-accent',   icon: 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
+  };
+  const cfg = configs[type] || configs.info;
+  cfg.cls.split(' ').forEach(c => banner.classList.add(c));
+  icon.innerHTML = `<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="${cfg.icon}"></path></svg>`;
+  text.textContent = message;
+
+  clearTimeout(statusTimeout);
+  statusTimeout = setTimeout(() => {
+    banner.classList.add('opacity-0', 'pointer-events-none');
+    setTimeout(() => banner.classList.add('hidden'), 300);
+  }, 5000);
+}
+
+// ─── SALT MATRIX HANDLERS ─────────────────────────────────────
+function toggleSaltRow(saltName) {
+  document.getElementById(`ppm_${saltName}`).disabled = !document.getElementById(`chk_${saltName}`).checked;
+  checkSaveButtonState();
+}
+
+function checkSaveButtonState() {
+  document.getElementById('btnSaveInit').disabled = !Object.keys(saltDb).some(s => document.getElementById(`chk_${s}`).checked);
+}
+
+// ─── PRESET HANDLERS ──────────────────────────────────────────
+function applyPreset() {
+  const presetName = document.getElementById('presetDropdown').value;
+  if (presetName === 'Manual') { showStatus('info', 'Manual mode active. Select salts below.'); return; }
+  const composition = activePresets[presetName];
+  Object.keys(saltDb).forEach(salt => {
+    const chk = document.getElementById(`chk_${salt}`);
+    const ppm = document.getElementById(`ppm_${salt}`);
+    if (composition[salt] !== undefined && composition[salt] > 0) {
+      chk.checked = true; ppm.disabled = false; ppm.value = composition[salt];
+    } else {
+      chk.checked = false; ppm.disabled = true;
+    }
+  });
+  checkSaveButtonState();
+  showStatus('success', `Preset '${presetName}' applied.`);
+}
+
+function toggleSaveRow(show = true) {
+  const row = document.getElementById('saveRow');
+  const input = document.getElementById('saveNameInput');
+  if (show) { row.classList.remove('hidden'); input.value = ''; input.focus(); }
+  else       { row.classList.add('hidden'); }
+}
+
+function confirmSavePreset() {
+  const name = document.getElementById('saveNameInput').value.trim();
+  if (!name) { showStatus('error', 'Please enter a name.'); return; }
+  const composition = {};
+  let hasSelection = false;
+  Object.keys(saltDb).forEach(salt => {
+    if (document.getElementById(`chk_${salt}`).checked) {
+      composition[salt] = parseFloat(document.getElementById(`ppm_${salt}`).value) || 0;
+      hasSelection = true;
+    }
+  });
+  if (!hasSelection) { showStatus('error', 'No salts selected to save.'); return; }
+  activePresets[name] = composition;
+  saveUserPresetsToStorage();
+  populatePresetDropdown();
+  document.getElementById('presetDropdown').value = name;
+  toggleSaveRow(false);
+  showStatus('success', `Saved '${name}'.`);
+}
+
+// ─── PRICING HANDLERS ─────────────────────────────────────────
+function togglePrices() {
+  const panel = document.getElementById('pricePanel');
+  const chevron = document.getElementById('priceChevron');
+  panel.classList.toggle('hidden');
+  chevron.classList.toggle('rotate-180');
+}
+
+function updatePrices() {
+  let count = 0;
+  Object.keys(saltDb).forEach(saltName => {
+    const candidates = supplierQuotes[saltName];
+    if (!candidates || !candidates.length) return;
+    const best = candidates.reduce((min, q) => quotePerG(q) < quotePerG(min) ? q : min, candidates[0]);
+    saltDb[saltName].price_per_g = quotePerG(best);
+    saltDb[saltName].price_source = `${best.supplier} ${best.catalog}, ${best.pack_kg} kg, $${best.price_usd.toFixed(2)} (auto-lowest)`;
+    count++;
+  });
+  lastPriceUpdate = new Date().toLocaleString();
+  renderPriceTable();
+  showStatus('warning', `Updated prices for ${count} salts.`);
+}
+
+function restoreDefaultPrices() {
+  Object.keys(defaultPriceMemory).forEach(saltName => {
+    if (saltDb[saltName]) {
+      saltDb[saltName].price_per_g = defaultPriceMemory[saltName].price_per_g;
+      saltDb[saltName].price_source = defaultPriceMemory[saltName].price_source;
+    }
+  });
+  lastPriceUpdate = 'Restored defaults';
+  renderPriceTable();
+  showStatus('info', 'Restored default prices.');
+}
+
+// ─── RESET ────────────────────────────────────────────────────
+function resetApp() {
+  document.getElementById('volumeInput').value = 10.0;
+  document.getElementById('tempInput').value = 25.0;
+  document.getElementById('presetDropdown').value = 'Manual';
+  document.getElementById('aiPromptInput').value = '';
+  Object.keys(saltDb).forEach(salt => {
+    document.getElementById(`chk_${salt}`).checked = false;
+    document.getElementById(`ppm_${salt}`).value = 500;
+    document.getElementById(`ppm_${salt}`).disabled = true;
+  });
+  checkSaveButtonState();
+  toggleSaveRow(false);
+  lastBatchResults = [];
+  totalOsmoticPressureGlobal = 0;
+  document.getElementById('sumMass').textContent = '0.000';
+  document.getElementById('sumCost').textContent = '0.00';
+  document.getElementById('sumPiAtm').textContent = '0.0000';
+  document.getElementById('sumPiPsi').textContent = '0.00';
+  document.getElementById('hydrateNote').style.display = 'none';
+  document.getElementById('resultsEmptyState').style.display = 'inline';
+  document.getElementById('btnAnalyzeBatch').classList.add('hidden');
+  document.getElementById('aiAnalysisPanel').classList.add('hidden');
+  document.getElementById('resultsTableBody').innerHTML = '<tr><td colspan="5" class="py-8 text-center text-slate-500 italic text-xs">Run a calculation to see detailed breakdown.</td></tr>';
+  renderDonutChart([]);
+  renderBarChart([]);
+  showStatus('info', 'Reset complete. Ready.');
+}
+
+// ─── EXPORTS ──────────────────────────────────────────────────
+function exportBatchCSV() {
+  if (!lastBatchResults.length) { showStatus('error', 'No results to export.'); return; }
+  const headers = ['salt', 'target_ppm', 'mass_to_weigh_g', 'cost_usd', 'pi_contribution_atm'];
+  let csv = headers.join(',') + '\n';
+  lastBatchResults.forEach(r => { csv += `${r.salt},${r.target_ppm},${r.mass_to_weigh_g},${r.cost_usd},${r.pi_contribution_atm}\n`; });
+  downloadCSV(csv, `salt_batch_${getTimestamp()}.csv`);
+  showStatus('success', 'Batch CSV exported.');
+}
+
+function exportPricesCSV() {
+  const headers = ['salt', 'mw_anhydrous', 'mw_hydrate', 'i', 'price_per_g_usd', 'price_source', 'last_update'];
+  let csv = headers.join(',') + '\n';
+  Object.keys(saltDb).forEach(salt => {
+    const p = saltDb[salt];
+    csv += `${salt},${p.MW_anhydrous},${p.MW_hydrate},${p.i},${p.price_per_g},"${p.price_source}",${lastPriceUpdate}\n`;
+  });
+  downloadCSV(csv, `salt_price_table_${getTimestamp()}.csv`);
+  showStatus('info', 'Price table CSV exported.');
+}
+```
+
+- [ ] **Step 2: Open browser, test interactions**
+
+Open `index.html`. Verify:
+- Check NaCl checkbox → PPM input enables
+- Uncheck → input disables; Save button disables
+- Apply preset "2000 ppm NaCl" → NaCl checked at 2000, all others unchecked
+- Click Save → row appears; enter name; click Save → preset added to dropdown
+- Click Reset → all cleared, charts show "no data"
+- Open Market & Pricing → price table visible; click "Restore Defaults" → status flash
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add index.html
+git commit -m "feat: add interaction handlers, status banner, reset, exports"
+```
+
+---
+
+## Task 6: Add calculation logic and results rendering
+
+**Files:**
+- Modify: `index.html` (append to `<script>` block)
+
+- [ ] **Step 1: Add `calculateBatch` and `renderCalculationResults`**
+
+Append to script:
+
+```javascript
+// ─── CALCULATION ──────────────────────────────────────────────
+function calculateBatch() {
+  const vol = parseFloat(document.getElementById('volumeInput').value);
+  const tempC = parseFloat(document.getElementById('tempInput').value);
+  if (isNaN(vol) || vol <= 0) { showStatus('error', 'Volume must be > 0 L.'); return; }
+  if (isNaN(tempC) || tempC <= -273.15) { showStatus('error', 'Temperature must be above absolute zero.'); return; }
+
+  const selected = [];
+  try {
+    Object.keys(saltDb).forEach(saltName => {
+      if (!document.getElementById(`chk_${saltName}`).checked) return;
+      const ppm = parseFloat(document.getElementById(`ppm_${saltName}`).value);
+      if (isNaN(ppm) || ppm <= 0) { showStatus('error', `Set a valid ppm > 0 for ${saltName}.`); throw new Error('Invalid PPM'); }
+      selected.push({ name: saltName, ppm });
+    });
+  } catch (e) { return; }
+
+  if (!selected.length) { showStatus('error', 'Select at least one salt to calculate.'); return; }
+
+  const tempK = tempC + 273.15;
+  let totalMass = 0, totalCost = 0, totalPiAtm = 0;
+  let hydrateAdjusted = false;
+  lastBatchResults = [];
+
+  selected.forEach(item => {
+    const props = saltDb[item.name];
+    const massAnhydrous = (item.ppm * vol) / 1000.0;
+    const hydrateFactor = props.MW_hydrate / props.MW_anhydrous;
+    const massWeigh = massAnhydrous * hydrateFactor;
+    const cost = massWeigh * props.price_per_g;
+    const molarity = (item.ppm / 1000.0) / props.MW_anhydrous;
+    const piAtm = props.i * molarity * R_GAS * tempK;
+
+    totalMass += massWeigh;
+    totalCost += cost;
+    totalPiAtm += piAtm;
+    if (Math.abs(hydrateFactor - 1.0) > 0.001) hydrateAdjusted = true;
+
+    lastBatchResults.push({
+      salt: item.name,
+      target_ppm: item.ppm,
+      mass_to_weigh_g: massWeigh,
+      cost_usd: cost,
+      pi_contribution_atm: piAtm
+    });
+  });
+
+  totalOsmoticPressureGlobal = totalPiAtm * 14.6959;
+  renderCalculationResults(totalMass, totalCost, totalPiAtm, hydrateAdjusted);
+  renderDonutChart(lastBatchResults);
+  renderBarChart(lastBatchResults);
+  showStatus('success', 'Calculation complete.');
+}
+
+function renderCalculationResults(totalMass, totalCost, totalPiAtm, hydrateAdjusted) {
+  document.getElementById('sumMass').textContent = totalMass.toLocaleString(undefined, { minimumFractionDigits: 3, maximumFractionDigits: 3 });
+  document.getElementById('sumCost').textContent = totalCost.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  document.getElementById('sumPiAtm').textContent = totalPiAtm.toLocaleString(undefined, { minimumFractionDigits: 4, maximumFractionDigits: 4 });
+  document.getElementById('sumPiPsi').textContent = (totalPiAtm * 14.6959).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+  document.getElementById('hydrateNote').style.display = hydrateAdjusted ? 'flex' : 'none';
+  document.getElementById('resultsEmptyState').style.display = 'none';
+
+  const btn = document.getElementById('btnAnalyzeBatch');
+  btn.classList.remove('hidden');
+  btn.disabled = false;
+  document.getElementById('aiAnalysisPanel').classList.add('hidden');
+
+  const tbody = document.getElementById('resultsTableBody');
+  tbody.innerHTML = '';
+  lastBatchResults.forEach(row => {
+    const tr = document.createElement('tr');
+    tr.className = 'hover:bg-white/5 transition-colors';
+    tr.innerHTML = `
+      <td class="py-2.5 px-1 font-medium text-slate-300">${row.salt}</td>
+      <td class="py-2.5 px-1 text-right text-slate-300">${row.target_ppm.toLocaleString(undefined, { maximumFractionDigits: 1 })}</td>
+      <td class="py-2.5 px-1 text-right font-bold text-accent">${row.mass_to_weigh_g.toLocaleString(undefined, { minimumFractionDigits: 3, maximumFractionDigits: 3 })}</td>
+      <td class="py-2.5 px-1 text-right text-slate-300">$${row.cost_usd.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}</td>
+      <td class="py-2.5 px-1 text-right text-slate-300">${row.pi_contribution_atm.toLocaleString(undefined, { minimumFractionDigits: 5, maximumFractionDigits: 5 })}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+```
+
+- [ ] **Step 2: Open browser, run a full calculation**
+
+Open `index.html`. Apply "Poseidon Sea Salt" preset → click Calculate Batch. Verify:
+- Stat cards update with non-zero values
+- Detailed Composition table populates with all salts
+- "Analyze ✨" button appears
+- Mass to Weigh column shows values in accent color
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add index.html
+git commit -m "feat: add calculation logic and results rendering"
+```
+
+---
+
+## Task 7: Add chart renderers
+
+**Files:**
+- Modify: `index.html` (append to `<script>` block)
+
+- [ ] **Step 1: Add donut chart renderer**
+
+Append to script:
+
+```javascript
+// ─── CHART RENDERERS ──────────────────────────────────────────
+const CHART_COLORS = [
+  '#38bdf8', '#818cf8', '#34d399', '#fbbf24', '#f87171',
+  '#a78bfa', '#22d3ee', '#fb923c', '#4ade80', '#e879f9',
+  '#f472b6', '#60a5fa'
+];
+
+function renderDonutChart(results) {
+  const el = document.getElementById('donutChart');
+  const legend = document.getElementById('donutLegend');
+  const center = document.getElementById('donutCenter');
+
+  if (!results || results.length === 0) {
+    el.style.background = 'conic-gradient(#334155 0% 100%)';
+    legend.innerHTML = '<span class="italic">Run a calculation to see chart.</span>';
+    center.textContent = 'No data';
+    return;
+  }
+
+  const totalMass = results.reduce((sum, r) => sum + r.mass_to_weigh_g, 0);
+  let cumulativePct = 0;
+  const segments = results.map((r, i) => {
+    const pct = (r.mass_to_weigh_g / totalMass) * 100;
+    const segment = { color: CHART_COLORS[i % CHART_COLORS.length], start: cumulativePct, end: cumulativePct + pct, label: r.salt, pct };
+    cumulativePct += pct;
+    return segment;
+  });
+
+  const gradient = segments.map(s => `${s.color} ${s.start.toFixed(1)}% ${s.end.toFixed(1)}%`).join(', ');
+  el.style.background = `conic-gradient(${gradient})`;
+  center.textContent = `${totalMass.toFixed(1)}g`;
+
+  legend.innerHTML = segments.map(s =>
+    `<div class="flex items-center gap-1.5 truncate">
+      <span class="w-2.5 h-2.5 rounded-sm flex-shrink-0" style="background:${s.color}"></span>
+      <span class="truncate text-slate-300">${s.label}</span>
+      <span class="ml-auto text-slate-500 flex-shrink-0">${s.pct.toFixed(1)}%</span>
+    </div>`
+  ).join('');
+}
+
+function renderBarChart(results) {
+  const container = document.getElementById('barChart');
+
+  if (!results || results.length === 0) {
+    container.innerHTML = `
+      <div class="absolute inset-0 flex flex-col justify-between pb-7 pointer-events-none">
+        <div class="w-full border-t border-slate-700/50"></div>
+        <div class="w-full border-t border-slate-700/50"></div>
+        <div class="w-full border-t border-slate-700/50"></div>
+        <div class="w-full border-t border-slate-700/50"></div>
+        <div class="w-full border-t border-slate-700/50"></div>
+      </div>
+      <div class="absolute inset-0 flex items-center justify-center pb-7">
+        <span class="text-xs text-slate-600 italic">Run a calculation to see cost breakdown.</span>
+      </div>`;
+    return;
+  }
+
+  const maxCost = Math.max(...results.map(r => r.cost_usd), 0.0001);
+
+  const barsHTML = results.map((r, i) => {
+    const heightPct = Math.max((r.cost_usd / maxCost) * 100, 1);
+    const color = CHART_COLORS[i % CHART_COLORS.length];
+    const label = r.salt.replace('·', '·').replace('2H2O', '2H₂O').replace('6H2O', '6H₂O');
+    return `
+      <div class="bar-item" style="height: 100%">
+        <span class="text-[9px] text-slate-300 mb-1">$${r.cost_usd.toFixed(2)}</span>
+        <div class="bar-fill" style="height: ${heightPct}%; background-color: ${color};"></div>
+        <span class="absolute -bottom-6 text-[9px] text-slate-400 whitespace-nowrap -rotate-45 origin-top-left mt-1">${label}</span>
+      </div>`;
+  }).join('');
+
+  const gridLines = `
+    <div class="absolute inset-0 flex flex-col justify-between pb-7 pointer-events-none">
+      <div class="w-full border-t border-slate-700/50 flex items-center"><span class="absolute -left-1 -translate-x-full text-[9px] text-slate-500">$${maxCost.toFixed(2)}</span></div>
+      <div class="w-full border-t border-slate-700/50"></div>
+      <div class="w-full border-t border-slate-700/50"></div>
+      <div class="w-full border-t border-slate-700/50"></div>
+      <div class="w-full border-t border-slate-700/50"></div>
+      <div class="w-full border-t border-slate-600"></div>
+    </div>`;
+
+  container.innerHTML = gridLines + barsHTML;
+}
+```
+
+- [ ] **Step 2: Open browser, run calculation and verify charts**
+
+Open `index.html`. Apply "Poseidon Sea Salt" → Calculate Batch. Verify:
+- Donut chart shows colored segments proportional to salt mass
+- Legend shows all salts with percentages
+- Bar chart shows bars proportional to cost per salt
+- Labels visible at bottom of bars
+- Click Reset → both charts return to placeholder state
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add index.html
+git commit -m "feat: add donut and bar chart renderers"
+```
+
+---
+
+## Task 8: Add AI features
+
+**Files:**
+- Modify: `index.html` (append to `<script>` block)
+
+- [ ] **Step 1: Add AI recipe generator and chemistry analyzer**
+
+Append to script:
+
+```javascript
+// ─── AI FEATURES ──────────────────────────────────────────────
+async function generateRecipeAI() {
+  const promptInput = document.getElementById('aiPromptInput').value.trim();
+  if (!promptInput) { showStatus('warning', 'Please enter a description (e.g. "Typical tap water").'); return; }
+
+  const btn = document.getElementById('btnGenerateAI');
+  const originalHTML = btn.innerHTML;
+  btn.innerHTML = `<svg class="animate-spin h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg> Thinking...`;
+  btn.disabled = true;
+
+  try {
+    const compProperties = {};
+    Object.keys(saltDb).forEach(salt => { compProperties[salt] = { type: 'NUMBER', description: `Concentration of ${salt} in ppm.` }; });
+    const schema = { type: 'OBJECT', properties: { recipeName: { type: 'STRING' }, composition: { type: 'OBJECT', properties: compProperties } }, required: ['recipeName', 'composition'] };
+    const saltList = Object.keys(saltDb).join(', ');
+    const sysInstruction = `You are a professional water chemist. Create a reasonable chemical recipe for the requested water profile using ONLY these salts: ${saltList}. All concentrations in ppm (mg/L). Respond with ONLY valid JSON: {"recipeName": "Name", "composition": {"NaCl": 500.0}}. Only include non-zero salts.`;
+    const jsonStr = await fetchGROQ(`Generate a water profile for: ${promptInput}`, sysInstruction, schema);
+    const recipeData = JSON.parse(jsonStr);
+    const finalName = `✨ ${recipeData.recipeName}`;
+    activePresets[finalName] = recipeData.composition;
+    saveUserPresetsToStorage();  // persist so it survives page reload
+    populatePresetDropdown();
+    document.getElementById('presetDropdown').value = finalName;
+    applyPreset();
+    showStatus('success', `AI generated and applied: ${finalName}`);
+    document.getElementById('aiPromptInput').value = '';
+  } catch (err) {
+    console.error(err);
+    showStatus('error', `AI error: ${err.message}`);
+  } finally {
+    btn.innerHTML = originalHTML;
+    btn.disabled = false;
+  }
+}
+
+async function analyzeBatchAI() {
+  if (!lastBatchResults.length) return;
+  const panel = document.getElementById('aiAnalysisPanel');
+  const textEl = document.getElementById('aiAnalysisText');
+  const loader = document.getElementById('aiLoadingIndicator');
+  const btn = document.getElementById('btnAnalyzeBatch');
+
+  panel.classList.remove('hidden');
+  textEl.innerHTML = "<span class='animate-pulse'>Analyzing chemistry, calculating risks...</span>";
+  loader.classList.remove('hidden');
+  btn.disabled = true;
+
+  try {
+    const batchSummary = lastBatchResults.map(r => `${r.salt}: ${r.target_ppm} ppm`).join(', ');
+    const sysInstruction = `You are a Senior Reverse Osmosis Engineer and Water Chemistry Expert. Provide a short, 2-paragraph analysis of the provided water chemistry batch. Focus on: 1) Specific scaling risks based on the salts present. 2) The operational feasibility given the total osmotic pressure. Keep it professional, concise, and relevant to industrial RO operations.`;
+    const analysis = await fetchGROQ(`Batch: ${batchSummary}. Total Osmotic Pressure: ${totalOsmoticPressureGlobal.toFixed(2)} psi. Analyze for RO operation.`, sysInstruction);
+    textEl.innerHTML = analysis.replace(/\n\n/g, '<br><br>');
+  } catch (err) {
+    console.error(err);
+    textEl.innerHTML = "<span class='text-danger'>Failed to retrieve analysis. Check console.</span>";
+  } finally {
+    loader.classList.add('hidden');
+    btn.disabled = false;
+  }
+}
+```
+
+- [ ] **Step 2: Test AI features (optional — requires network)**
+
+Open `index.html`. In AI Recipe Generator, type "Dead Sea water" and click Generate. Verify loading spinner appears, preset is generated and applied. (Skip if no network access.)
+
+- [ ] **Step 3: Commit**
+
+```bash
+git add index.html
+git commit -m "feat: add AI recipe generator and chemistry analyzer"
+```
+
+---
+
+## Task 9: Final QA and skin verification
+
+**Files:**
+- Modify: `index.html` (fix any issues found)
+
+- [ ] **Step 1: Test Electric Blue skin end-to-end**
+
+Open `index.html`. Verify with Electric Blue skin active:
+- Neon-blue borders on all panels
+- "Calculate Batch" button has cyan→blue gradient with blue glow
+- Accent text (mass to weigh column) is sky-blue
+- Skin dropdown shows "Electric Blue"
+- Charts display correct colors after calculation
+
+- [ ] **Step 2: Test Original skin end-to-end**
+
+Switch dropdown to "Original". Verify:
+- Panel borders change to teal/green tint
+- "Calculate Batch" button changes to teal gradient with teal glow
+- Accent text changes to teal
+- Reload page — Original skin persists
+
+- [ ] **Step 3: Test all major features work in both skins**
+
+In each skin, verify:
+- [ ] Apply "Poseidon Sea Salt" preset → Calculate → charts populate
+- [ ] "Analyze ✨" button appears and triggers AI analysis
+- [ ] Save a custom preset → reload → preset still listed
+- [ ] Export Batch CSV → file downloads
+- [ ] Reset → everything clears
+- [ ] Market & Pricing section expands/collapses
+- [ ] "Update to Lowest Quotes" + "Restore Defaults" work
+
+- [ ] **Step 4: Fix any issues found in Steps 1–3, then commit**
+
+If bugs are found during QA, fix them and create a new commit for each fix (do not amend prior commits):
+
+```bash
+git add index.html
+git commit -m "fix: <describe the specific issue fixed>"
+```
+
+Once all issues are resolved:
+
+```bash
+git add index.html
+git commit -m "feat: complete skin system and dashboard layout rebuild"
+```
+
+---
+
+## Troubleshooting Notes
+
+**Chart colors don't change when switching skins:** Charts use fixed `CHART_COLORS` array (intentional — chart colors are independent of the skin accent, keeping the donut readable). Only panels, borders, accent text, and the calculate button change.
+
+**`bg-panel/80` opacity modifier doesn't work:** Expected. Panel opacity is baked into `--color-panel` as `rgba(30,41,59,0.8)`. The Tailwind opacity modifier is not used for this token. Use `bg-panel` (not `bg-panel/80`) on elements that need the panel color.
+
+**Skin dropdown shows wrong value on load:** FOUC inline script sets `data-theme` attribute before JS runs; `initSkin()` sets `skinSelect.value` on `DOMContentLoaded`. If they're out of sync, check that `initSkin()` is called before any other UI builder.
+
+**PPM inputs not responding to accent color change:** Salt matrix rows are dynamically built by `buildSaltMatrix()`. The `accent-color` CSS property on checkbox inputs uses `var(--color-accent)` and will automatically update when the skin changes.
