@@ -122,29 +122,30 @@
       box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
       backdrop-filter: none;
       position: relative;
+      overflow: visible !important;
     }
     /* Scroll-roll top & bottom edges on panels */
     [data-theme="alchemy"] .neon-panel::before,
     [data-theme="alchemy"] .neon-panel::after {
       content: '';
       position: absolute;
-      left: -2px;
-      right: -2px;
-      height: 10px;
-      background: linear-gradient(to bottom, #d6c9a8, #bda481 40%, #a38965 60%, #bda481);
-      border: 1px solid #a38965;
+      left: -4px;
+      right: -4px;
+      height: 18px;
+      background: linear-gradient(to bottom, #e8d9b8 0%, #d6c9a8 15%, #bda481 35%, #9a7d57 50%, #bda481 65%, #d6c9a8 85%, #e8d9b8 100%);
+      border: 2px solid #8c6b4a;
       pointer-events: none;
       z-index: 5;
     }
     [data-theme="alchemy"] .neon-panel::before {
-      top: -6px;
-      border-radius: 6px 6px 0 0;
-      box-shadow: 0 -1px 3px rgba(0,0,0,0.15), inset 0 2px 2px rgba(255,255,255,0.3);
+      top: -10px;
+      border-radius: 10px 10px 0 0;
+      box-shadow: 0 -2px 5px rgba(0,0,0,0.25), inset 0 3px 4px rgba(255,255,255,0.4);
     }
     [data-theme="alchemy"] .neon-panel::after {
-      bottom: -6px;
-      border-radius: 0 0 6px 6px;
-      box-shadow: 0 1px 3px rgba(0,0,0,0.15), inset 0 -2px 2px rgba(255,255,255,0.3);
+      bottom: -10px;
+      border-radius: 0 0 10px 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.25), inset 0 -3px 4px rgba(255,255,255,0.4);
     }
 
     /* Calculate → brass button with embossed edge */
@@ -568,7 +569,7 @@
         </section>
 
         <!-- § 3. Salt Matrix -->
-        <section class="neon-panel flex flex-col overflow-hidden" style="max-height: 420px;">
+        <section class="neon-panel flex flex-col" style="max-height: 420px;">
           <div class="p-4 border-b border-slate-700/60 flex justify-between items-center bg-panel-light/30">
             <h2 class="text-xs font-semibold text-text-muted tracking-wider uppercase">3. Salt Matrix</h2>
             <span class="text-xs text-accent font-semibold bg-accent/10 px-2.5 py-1 rounded-full border border-accent/20">Target PPM</span>
@@ -579,7 +580,7 @@
         </section>
 
         <!-- § Actions -->
-        <section class="neon-panel p-5 flex flex-col gap-4 relative overflow-hidden">
+        <section class="neon-panel p-5 flex flex-col gap-4 relative">
           <div class="absolute inset-0 bg-gradient-to-t from-accent/5 to-transparent pointer-events-none rounded-xl"></div>
           <button onclick="calculateBatch()"
             class="calculate-btn w-full text-white font-bold py-4 rounded-xl text-lg transition-all transform hover:scale-[1.01] flex items-center justify-center gap-2 relative z-10">
@@ -626,7 +627,7 @@
         </section>
 
         <!-- § Detailed Composition Table -->
-        <section class="neon-panel p-5 flex flex-col gap-4 overflow-hidden">
+        <section class="neon-panel p-5 flex flex-col gap-4">
           <div class="flex justify-between items-center">
             <h2 class="text-xs font-semibold text-text-muted tracking-wider uppercase">Detailed Composition</h2>
             <div class="flex items-center gap-2">
@@ -689,7 +690,7 @@
     </main><!-- /TWO-COLUMN -->
 
     <!-- ═══════════════ FULL-WIDTH FOOTER ═══════════════ -->
-    <section class="neon-panel overflow-hidden mb-8">
+    <section class="neon-panel mb-8">
       <button onclick="togglePrices()" class="w-full p-4 flex justify-between items-center hover:bg-white/5 transition-colors focus:outline-none">
         <div class="flex items-center gap-3">
           <div class="p-1.5 bg-panel-light rounded border border-slate-700">
