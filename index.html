@@ -121,16 +121,84 @@
       background-color: #f3ebd9;
       box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
       backdrop-filter: none;
+      position: relative;
+    }
+    /* Scroll-roll top & bottom edges on panels */
+    [data-theme="alchemy"] .neon-panel::before,
+    [data-theme="alchemy"] .neon-panel::after {
+      content: '';
+      position: absolute;
+      left: -2px;
+      right: -2px;
+      height: 10px;
+      background: linear-gradient(to bottom, #d6c9a8, #bda481 40%, #a38965 60%, #bda481);
+      border: 1px solid #a38965;
+      pointer-events: none;
+      z-index: 5;
+    }
+    [data-theme="alchemy"] .neon-panel::before {
+      top: -6px;
+      border-radius: 6px 6px 0 0;
+      box-shadow: 0 -1px 3px rgba(0,0,0,0.15), inset 0 2px 2px rgba(255,255,255,0.3);
+    }
+    [data-theme="alchemy"] .neon-panel::after {
+      bottom: -6px;
+      border-radius: 0 0 6px 6px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.15), inset 0 -2px 2px rgba(255,255,255,0.3);
     }
 
-    /* Calculate → brass button */
+    /* Calculate → brass button with embossed edge */
     [data-theme="alchemy"] .calculate-btn {
       border: 2px solid #5c4224;
       border-radius: 8px;
       color: #3d2c16;
       text-shadow: 0 1px 0 rgba(255,255,255,0.3);
+      background: linear-gradient(to bottom, #e3c594, #c29b61) !important;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 4px 8px rgba(0,0,0,0.3) !important;
+    }
+    [data-theme="alchemy"] .calculate-btn:hover { filter: brightness(1.05); }
+    [data-theme="alchemy"] .calculate-btn:active {
+      background: linear-gradient(to bottom, #c29b61, #e3c594) !important;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.4) !important;
     }
     [data-theme="alchemy"] .calculate-btn svg { color: #3d2c16; }
+
+    /* All secondary buttons → woodgrain */
+    [data-theme="alchemy"] button[class*="bg-panel"],
+    [data-theme="alchemy"] button[class*="bg-panel-light"] {
+      background: linear-gradient(to bottom, #d6b582, #ad8751) !important;
+      border: 2px solid #8e6833 !important;
+      border-radius: 4px !important;
+      color: #3d2c16 !important;
+      font-weight: bold;
+      text-shadow: 0 1px 0 rgba(255,255,255,0.3);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 2px 4px rgba(0,0,0,0.3);
+    }
+    [data-theme="alchemy"] button[class*="bg-panel"]:hover,
+    [data-theme="alchemy"] button[class*="bg-panel-light"]:hover {
+      filter: brightness(1.05);
+    }
+    [data-theme="alchemy"] button[class*="bg-panel"]:active,
+    [data-theme="alchemy"] button[class*="bg-panel-light"]:active {
+      background: linear-gradient(to bottom, #ad8751, #d6b582) !important;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.4) !important;
+    }
+    /* Generate button → brass */
+    [data-theme="alchemy"] button[class*="bg-accent-secondary"] {
+      background: linear-gradient(to bottom, #829c7b, #6b8665) !important;
+      border: 2px solid #4a6344 !important;
+      color: #1a2e16 !important;
+      text-shadow: 0 1px 0 rgba(255,255,255,0.2);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 2px 4px rgba(0,0,0,0.3);
+    }
+    /* Warning/pricing buttons → wood */
+    [data-theme="alchemy"] button[class*="bg-warning"] {
+      background: linear-gradient(to bottom, #d6b582, #ad8751) !important;
+      border: 2px solid #8e6833 !important;
+      color: #3d2c16 !important;
+      text-shadow: 0 1px 0 rgba(255,255,255,0.3);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.4), 0 2px 4px rgba(0,0,0,0.3);
+    }
 
     /* Skin select → vintage */
     [data-theme="alchemy"] .skin-select {
@@ -184,9 +252,9 @@
     [data-theme="alchemy"] .hover\:bg-white\/5:hover { background-color: rgba(0,0,0,0.04) !important; }
     [data-theme="alchemy"] .hover\:bg-panel-light:hover { background-color: #ded0b8 !important; }
 
-    /* Secondary buttons → woodgrain */
-    [data-theme="alchemy"] .bg-success { background-color: #829c7b !important; }
-    [data-theme="alchemy"] .hover\:bg-emerald-500:hover { background-color: #6b8665 !important; }
+    /* Secondary buttons → woodgrain (handled above) */
+    [data-theme="alchemy"] .bg-success { background: linear-gradient(to bottom, #829c7b, #6b8665) !important; border: 2px solid #4a6344 !important; }
+    [data-theme="alchemy"] .hover\:bg-emerald-500:hover { filter: brightness(1.05); }
     [data-theme="alchemy"] .bg-gradient-to-r {
       background-image: linear-gradient(to right, #829c7b, #8c6b4a) !important;
     }
@@ -227,8 +295,56 @@
 
     /* Scroll edge decoration on detailed composition panel */
     [data-theme="alchemy"] section:has(#resultsTableBody) {
-      border-top: 6px solid #bda481;
-      border-bottom: 6px solid #bda481;
+      position: relative;
+      overflow: visible;
+    }
+    [data-theme="alchemy"] section:has(#resultsTableBody)::before,
+    [data-theme="alchemy"] section:has(#resultsTableBody)::after {
+      content: '';
+      position: absolute;
+      left: -4px;
+      right: -4px;
+      height: 14px;
+      background: linear-gradient(to bottom, #d6c9a8 0%, #bda481 30%, #9a7d57 50%, #bda481 70%, #d6c9a8 100%);
+      border: 1px solid #8c6b4a;
+      z-index: 10;
+    }
+    [data-theme="alchemy"] section:has(#resultsTableBody)::before {
+      top: -8px;
+      border-radius: 8px 8px 0 0;
+      box-shadow: 0 -2px 4px rgba(0,0,0,0.2), inset 0 3px 3px rgba(255,255,255,0.35);
+    }
+    [data-theme="alchemy"] section:has(#resultsTableBody)::after {
+      bottom: -8px;
+      border-radius: 0 0 8px 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2), inset 0 -3px 3px rgba(255,255,255,0.35);
+    }
+
+    /* Footer → parchment scroll */
+    [data-theme="alchemy"] section:has(#pricePanel) {
+      position: relative;
+      overflow: visible;
+    }
+    [data-theme="alchemy"] section:has(#pricePanel)::before,
+    [data-theme="alchemy"] section:has(#pricePanel)::after {
+      content: '';
+      position: absolute;
+      left: -4px;
+      right: -4px;
+      height: 14px;
+      background: linear-gradient(to bottom, #d6c9a8 0%, #bda481 30%, #9a7d57 50%, #bda481 70%, #d6c9a8 100%);
+      border: 1px solid #8c6b4a;
+      z-index: 10;
+    }
+    [data-theme="alchemy"] section:has(#pricePanel)::before {
+      top: -8px;
+      border-radius: 8px 8px 0 0;
+      box-shadow: 0 -2px 4px rgba(0,0,0,0.2), inset 0 3px 3px rgba(255,255,255,0.35);
+    }
+    [data-theme="alchemy"] section:has(#pricePanel)::after {
+      bottom: -8px;
+      border-radius: 0 0 8px 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.2), inset 0 -3px 3px rgba(255,255,255,0.35);
     }
 
     /* === SEMANTIC CLASSES === */
