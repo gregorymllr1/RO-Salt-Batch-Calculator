@@ -123,32 +123,31 @@
       backdrop-filter: none;
       position: relative;
       overflow: visible !important;
-      padding-top: 28px !important;
-      padding-bottom: 24px !important;
+      margin-top: 12px;
+      margin-bottom: 12px;
     }
-    /* Scroll-roll top & bottom edges on panels */
-    [data-theme="alchemy"] .neon-panel::before,
-    [data-theme="alchemy"] .neon-panel::after {
-      content: '';
+    /* Scroll rolls are injected as real DOM elements by applyAlchemyScrollRolls() */
+    .alchemy-scroll-top, .alchemy-scroll-bottom {
       position: absolute;
-      left: -4px;
-      right: -4px;
-      height: 18px;
-      background: linear-gradient(to bottom, #e8d9b8 0%, #d6c9a8 15%, #bda481 35%, #9a7d57 50%, #bda481 65%, #d6c9a8 85%, #e8d9b8 100%);
-      border: 2px solid #8c6b4a;
+      left: -2px;
+      right: -2px;
+      height: 22px;
+      background: linear-gradient(to bottom,
+        #f0e6cc 0%,
+        #ddc99a 18%,
+        #c9a96e 40%,
+        #8c6433 50%,
+        #c9a96e 60%,
+        #ddc99a 82%,
+        #f0e6cc 100%);
+      border: 2px solid #7a5530;
+      border-radius: 12px;
+      z-index: 20;
       pointer-events: none;
-      z-index: 5;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.5), inset 0 -1px 0 rgba(0,0,0,0.2);
     }
-    [data-theme="alchemy"] .neon-panel::before {
-      top: -10px;
-      border-radius: 10px 10px 0 0;
-      box-shadow: 0 -2px 5px rgba(0,0,0,0.25), inset 0 3px 4px rgba(255,255,255,0.4);
-    }
-    [data-theme="alchemy"] .neon-panel::after {
-      bottom: -10px;
-      border-radius: 0 0 10px 10px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.25), inset 0 -3px 4px rgba(255,255,255,0.4);
-    }
+    .alchemy-scroll-top  { top: -11px; }
+    .alchemy-scroll-bottom { bottom: -11px; }
 
     /* Calculate → brass button with embossed edge */
     [data-theme="alchemy"] .calculate-btn {
@@ -888,9 +887,26 @@
     }
 
     // ─── SKIN SWITCHER ────────────────────────────────────────────
+    function applyAlchemyScrollRolls() {
+      // Remove any existing rolls first
+      document.querySelectorAll('.alchemy-scroll-top, .alchemy-scroll-bottom').forEach(el => el.remove());
+      if (document.documentElement.getAttribute('data-theme') !== 'alchemy') return;
+      document.querySelectorAll('.neon-panel').forEach(panel => {
+        // Ensure panel can show overflow for the rolls (which extend outside bounds)
+        panel.style.overflow = 'visible';
+        const top = document.createElement('div');
+        top.className = 'alchemy-scroll-top';
+        const bot = document.createElement('div');
+        bot.className = 'alchemy-scroll-bottom';
+        panel.appendChild(top);
+        panel.appendChild(bot);
+      });
+    }
+
     function applySkin(value) {
       document.documentElement.setAttribute('data-theme', value);
       localStorage.setItem('skin', value);
+      applyAlchemyScrollRolls();
     }
 
     function initSkin() {
@@ -902,6 +918,7 @@
       document.getElementById('skinSelect').addEventListener('change', function() {
         applySkin(this.value);
       });
+      applyAlchemyScrollRolls();
     }
 
     // ─── BROWSER STORAGE ──────────────────────────────────────────
