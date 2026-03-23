@@ -123,6 +123,8 @@
       backdrop-filter: none;
       position: relative;
       overflow: visible !important;
+      padding-top: 28px !important;
+      padding-bottom: 24px !important;
     }
     /* Scroll-roll top & bottom edges on panels */
     [data-theme="alchemy"] .neon-panel::before,
@@ -294,58 +296,96 @@
       -webkit-text-fill-color: transparent;
     }
 
-    /* Scroll edge decoration on detailed composition panel */
-    [data-theme="alchemy"] section:has(#resultsTableBody) {
-      position: relative;
-      overflow: visible;
-    }
-    [data-theme="alchemy"] section:has(#resultsTableBody)::before,
-    [data-theme="alchemy"] section:has(#resultsTableBody)::after {
-      content: '';
-      position: absolute;
-      left: -4px;
-      right: -4px;
-      height: 14px;
-      background: linear-gradient(to bottom, #d6c9a8 0%, #bda481 30%, #9a7d57 50%, #bda481 70%, #d6c9a8 100%);
-      border: 1px solid #8c6b4a;
-      z-index: 10;
-    }
-    [data-theme="alchemy"] section:has(#resultsTableBody)::before {
-      top: -8px;
-      border-radius: 8px 8px 0 0;
-      box-shadow: 0 -2px 4px rgba(0,0,0,0.2), inset 0 3px 3px rgba(255,255,255,0.35);
-    }
-    [data-theme="alchemy"] section:has(#resultsTableBody)::after {
-      bottom: -8px;
-      border-radius: 0 0 8px 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.2), inset 0 -3px 3px rgba(255,255,255,0.35);
+    /* === ALCHEMY: Green outer panels for Batch Summary + Donut chart === */
+    [data-theme="alchemy"] section:has(#sumMass),
+    [data-theme="alchemy"] section:has(#donutChart) {
+      background-color: #aabfa3 !important;
+      border-color: #829c7b !important;
     }
 
-    /* Footer → parchment scroll */
-    [data-theme="alchemy"] section:has(#pricePanel) {
-      position: relative;
-      overflow: visible;
+    /* Stat cards inside Batch Summary → solid parchment */
+    [data-theme="alchemy"] section:has(#sumMass) .grid > div {
+      background-color: #f3ebd9 !important;
+      border: 1px solid #bba37b !important;
+      border-radius: 4px;
     }
-    [data-theme="alchemy"] section:has(#pricePanel)::before,
-    [data-theme="alchemy"] section:has(#pricePanel)::after {
-      content: '';
-      position: absolute;
-      left: -4px;
-      right: -4px;
-      height: 14px;
-      background: linear-gradient(to bottom, #d6c9a8 0%, #bda481 30%, #9a7d57 50%, #bda481 70%, #d6c9a8 100%);
-      border: 1px solid #8c6b4a;
-      z-index: 10;
+
+    /* Section headings on green panels */
+    [data-theme="alchemy"] section:has(#sumMass) h2,
+    [data-theme="alchemy"] section:has(#donutChart) h2 {
+      color: #2a2118 !important;
     }
-    [data-theme="alchemy"] section:has(#pricePanel)::before {
-      top: -8px;
-      border-radius: 8px 8px 0 0;
-      box-shadow: 0 -2px 4px rgba(0,0,0,0.2), inset 0 3px 3px rgba(255,255,255,0.35);
+
+    /* All text inside Batch Summary → dark brown */
+    [data-theme="alchemy"] section:has(#sumMass) span,
+    [data-theme="alchemy"] section:has(#sumMass) div {
+      color: #2a2118;
     }
-    [data-theme="alchemy"] section:has(#pricePanel)::after {
-      bottom: -8px;
-      border-radius: 0 0 8px 8px;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.2), inset 0 -3px 3px rgba(255,255,255,0.35);
+
+    /* Legend text in donut chart */
+    [data-theme="alchemy"] #donutLegend span {
+      color: #2a2118 !important;
+    }
+    [data-theme="alchemy"] #donutCenter {
+      color: #2a2118 !important;
+    }
+    /* Donut chart initial empty state */
+    [data-theme="alchemy"] #donutChart[data-empty-color] {
+      background: conic-gradient(#d4c4a8 0% 100%) !important;
+    }
+
+    /* Salt Matrix rows alternating green/plain */
+    [data-theme="alchemy"] #saltMatrix > div:nth-child(odd) {
+      background-color: #aabfa3 !important;
+      border: 1px solid #829c7b;
+      border-radius: 4px;
+    }
+    [data-theme="alchemy"] #saltMatrix > div:nth-child(even) {
+      background-color: transparent !important;
+    }
+    [data-theme="alchemy"] #saltMatrix .font-medium {
+      color: #2a2118 !important;
+    }
+    /* PPM inputs in salt matrix */
+    [data-theme="alchemy"] #saltMatrix input[type="number"] {
+      background-color: #fdfaf6 !important;
+      color: #2a2118 !important;
+      border-color: #bba37b !important;
+    }
+    [data-theme="alchemy"] #saltMatrix input[type="number"]:disabled {
+      background-color: rgba(253,250,246,0.5) !important;
+      color: #8c6b4a !important;
+    }
+
+    /* Salt Matrix header row on green panel */
+    [data-theme="alchemy"] section:has(#saltMatrix) > div:first-child {
+      background-color: rgba(170,191,163,0.4) !important;
+      border-color: #829c7b !important;
+    }
+
+    /* Scroll rolls — redesign to flat inside-panel bars matching reference */
+    [data-theme="alchemy"] .neon-panel::before,
+    [data-theme="alchemy"] .neon-panel::after {
+      height: 16px !important;
+      background: #bda481 !important;
+      border: none !important;
+      border-radius: 0 !important;
+      box-shadow: inset 0 2px 3px rgba(255,255,255,0.3), inset 0 -2px 3px rgba(0,0,0,0.15) !important;
+      top: 0 !important;
+      bottom: auto !important;
+      left: 0 !important;
+      right: 0 !important;
+    }
+    [data-theme="alchemy"] .neon-panel::before {
+      top: 0 !important;
+      border-radius: 4px 4px 0 0 !important;
+      border-bottom: 2px solid #a38965 !important;
+    }
+    [data-theme="alchemy"] .neon-panel::after {
+      top: auto !important;
+      bottom: 0 !important;
+      border-radius: 0 0 4px 4px !important;
+      border-top: 2px solid #a38965 !important;
     }
 
     /* === SEMANTIC CLASSES === */
@@ -612,7 +652,7 @@
           <div class="flex items-center gap-6">
             <!-- Chart -->
             <div class="relative flex-shrink-0 w-40 h-40">
-              <div id="donutChart" class="donut-ring w-40 h-40" style="background: conic-gradient(#475569 0% 100%)"></div>
+              <div id="donutChart" class="donut-ring w-40 h-40" style="background: conic-gradient(#475569 0% 100%)" data-empty-color="#475569"></div>
               <div class="absolute inset-0 flex items-center justify-center">
                 <div class="text-center z-10" style="pointer-events:none">
                   <span id="donutCenter" class="text-xs text-text-muted">No data</span>
