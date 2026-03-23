@@ -329,10 +329,7 @@
     [data-theme="alchemy"] #donutCenter {
       color: #2a2118 !important;
     }
-    /* Donut chart initial empty state */
-    [data-theme="alchemy"] #donutChart[data-empty-color] {
-      background: conic-gradient(#d4c4a8 0% 100%) !important;
-    }
+
 
     /* Salt Matrix rows alternating green/plain */
     [data-theme="alchemy"] #saltMatrix > div:nth-child(odd) {
@@ -652,7 +649,7 @@
           <div class="flex items-center gap-6">
             <!-- Chart -->
             <div class="relative flex-shrink-0 w-40 h-40">
-              <div id="donutChart" class="donut-ring w-40 h-40" style="background: conic-gradient(#475569 0% 100%)" data-empty-color="#475569"></div>
+              <div id="donutChart" class="donut-ring w-40 h-40" style="background: conic-gradient(#475569 0% 100%)"></div>
               <div class="absolute inset-0 flex items-center justify-center">
                 <div class="text-center z-10" style="pointer-events:none">
                   <span id="donutCenter" class="text-xs text-text-muted">No data</span>
