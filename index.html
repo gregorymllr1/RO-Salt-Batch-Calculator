@@ -8,7 +8,7 @@
   <!-- FOUC prevention: set data-theme from localStorage before first paint -->
   <script>
     (function () {
-      var VALID = ['electric-blue', 'original'];
+      var VALID = ['electric-blue', 'original', 'x-files'];
       var stored = localStorage.getItem('skin');
       var skin = VALID.indexOf(stored) !== -1 ? stored : 'electric-blue';
       if (VALID.indexOf(stored) === -1) localStorage.setItem('skin', 'electric-blue');
@@ -72,6 +72,21 @@
       --color-btn-calculate-from:   #22d3ee;
       --color-btn-calculate-to:     #3b82f6;
       --shadow-btn-calculate:       0 0 20px rgba(6, 182, 212, 0.6);
+    }
+
+    [data-theme="x-files"] {
+      --color-bg:               #050d05;
+      --color-panel:            rgba(8, 24, 8, 0.85);
+      --color-panel-light:      #0f2810;
+      --color-accent:           #39ff14;
+      --color-accent-secondary: #22c55e;
+      --color-border:           rgba(57, 255, 20, 0.35);
+      --color-text:             #d4ffd4;
+      --color-text-muted:       #6fbf6f;
+      --shadow-glow:                0 0 18px rgba(57, 255, 20, 0.15), inset 0 0 12px rgba(57, 255, 20, 0.08);
+      --color-btn-calculate-from:   #22c55e;
+      --color-btn-calculate-to:     #15803d;
+      --shadow-btn-calculate:       0 0 25px rgba(57, 255, 20, 0.5);
     }
 
     /* === SEMANTIC CLASSES === */
@@ -181,6 +196,7 @@
         <select id="skinSelect" class="skin-select">
           <option value="electric-blue">Electric Blue</option>
           <option value="original">Original</option>
+          <option value="x-files">X-Files</option>
         </select>
       </div>
     </header>
@@ -470,7 +486,7 @@
     const R_GAS = 0.082057;
     const GROQ_PROXY_URL = 'https://groq-proxy.gregorymllr1.workers.dev';
     const GROQ_MODEL = 'openai/gpt-oss-120b';
-    const VALID_SKINS = ['electric-blue', 'original'];
+    const VALID_SKINS = ['electric-blue', 'original', 'x-files'];
 
     let lastPriceUpdate = 'Not updated in this session';
     let lastBatchResults = [];
