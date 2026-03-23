@@ -4,12 +4,12 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>RO Salt Batch Calculator</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800&family=Playfair+Display:wght@600;700&family=Share+Tech+Mono&family=Source+Sans+Pro:wght@400;600;700&display=swap" rel="stylesheet">
 
   <!-- FOUC prevention: set data-theme from localStorage before first paint -->
   <script>
     (function () {
-      var VALID = ['electric-blue', 'original', 'x-files', 'alchemy'];
+      var VALID = ['electric-blue', 'original', 'x-files', 'alchemy', 'future'];
       var stored = localStorage.getItem('skin');
       var skin = VALID.indexOf(stored) !== -1 ? stored : 'electric-blue';
       if (VALID.indexOf(stored) === -1) localStorage.setItem('skin', 'electric-blue');
@@ -103,6 +103,21 @@
       --color-btn-calculate-from:   #e3c594;
       --color-btn-calculate-to:     #c29b61;
       --shadow-btn-calculate:       inset 0 1px 0 rgba(255,255,255,0.4), 0 4px 8px rgba(0,0,0,0.3);
+    }
+
+    [data-theme="future"] {
+      --color-bg:               #1f2630;
+      --color-panel:            #48505c;
+      --color-panel-light:      #2f3642;
+      --color-accent:           #ff9c24;
+      --color-accent-secondary: #00cfff;
+      --color-border:           #1d222b;
+      --color-text:             #dbe7ff;
+      --color-text-muted:       #8ea2bf;
+      --shadow-glow:                inset 0 2px 4px rgba(255,255,255,0.2), inset 0 -3px 8px rgba(0,0,0,0.75), 0 10px 22px rgba(0,0,0,0.6);
+      --color-btn-calculate-from:   #ffd34d;
+      --color-btn-calculate-to:     #ff7a00;
+      --shadow-btn-calculate:       inset 0 1px 0 rgba(255,255,255,0.5), 0 0 15px rgba(255,153,0,0.45), 0 4px 10px rgba(0,0,0,0.55);
     }
 
     /* ─── ALCHEMY LIGHT-THEME OVERRIDES ─── */
@@ -291,6 +306,7 @@
     /* AI gradient text */
     [data-theme="alchemy"] .ai-gradient-text {
       background: linear-gradient(to right, #8c6b4a, #829c7b, #d6b582);
+      background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -384,6 +400,224 @@
       border-top: 2px solid #a38965 !important;
     }
 
+    /* ─── FUTURE RETRO-FUTURISTIC OVERRIDES ─── */
+    [data-theme="future"] body {
+      font-family: 'Share Tech Mono', 'Segoe UI', sans-serif;
+      background-color: #212732;
+      background-image:
+        radial-gradient(ellipse at top, rgba(100, 140, 180, 0.18) 0%, transparent 45%),
+        linear-gradient(125deg, #3e4653 0%, #252d38 38%, #171d27 100%);
+      color: #dbe7ff;
+    }
+    [data-theme="future"] h1,
+    [data-theme="future"] h2 {
+      font-family: 'Orbitron', 'Share Tech Mono', sans-serif;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      text-shadow: 0 0 10px rgba(0, 207, 255, 0.2);
+    }
+
+    [data-theme="future"] .neon-panel {
+      border: 2px solid #141920;
+      border-radius: 10px;
+      background: linear-gradient(145deg, #77808d 0%, #5e6875 30%, #404955 100%);
+      box-shadow: inset 0 2px 5px rgba(255,255,255,0.22), inset 0 -2px 5px rgba(0,0,0,0.7), 0 10px 18px rgba(0,0,0,0.55);
+      position: relative;
+      overflow: visible !important;
+      color: #eef4ff;
+    }
+
+    [data-theme="future"] .skin-select {
+      background: linear-gradient(to bottom, #1b222d, #10161e);
+      color: #d7eeff;
+      border: 1px solid #5d6a7d;
+      box-shadow: inset 0 1px 2px rgba(255,255,255,0.12), 0 0 10px rgba(0,207,255,0.15);
+    }
+
+    [data-theme="future"] header h1 {
+      font-size: 2rem;
+      font-weight: 800;
+      background: linear-gradient(to bottom, #fff08d, #ff8b1d 62%, #ff3a24);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-shadow: 1px 2px 0 rgba(0,0,0,0.8), 0 0 14px rgba(255,128,0,0.45);
+    }
+    [data-theme="future"] header p {
+      color: #9bb3cf;
+      font-family: 'Share Tech Mono', monospace;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    [data-theme="future"] section h2 {
+      display: inline-flex;
+      align-items: center;
+      min-height: 2rem;
+      padding: 0.3rem 1.05rem;
+      border: 2px solid #1c222b;
+      border-radius: 0.55rem;
+      background: linear-gradient(to bottom, #202834, #121923);
+      box-shadow: inset 0 1px 2px rgba(255,255,255,0.15), 0 0 12px rgba(255,152,0,0.28);
+      color: #ffb53c !important;
+      font-size: 0.9rem !important;
+    }
+    [data-theme="future"] section:has(#saltMatrix) h2 {
+      color: #67deff !important;
+      box-shadow: inset 0 1px 2px rgba(255,255,255,0.15), 0 0 12px rgba(0,207,255,0.24);
+    }
+
+    [data-theme="future"] .text-white,
+    [data-theme="future"] .text-slate-300 { color: #eef4ff !important; }
+    [data-theme="future"] .text-slate-400,
+    [data-theme="future"] .text-slate-500,
+    [data-theme="future"] .text-text-muted { color: #9eb3cf !important; }
+
+    [data-theme="future"] [class*="border-slate-7"],
+    [data-theme="future"] [class*="border-slate-6"] {
+      border-color: #303a47 !important;
+    }
+
+    [data-theme="future"] .bg-panel-light\/40,
+    [data-theme="future"] .bg-panel-light\/30,
+    [data-theme="future"] .bg-panel,
+    [data-theme="future"] .bg-\[\#0f172a\],
+    [data-theme="future"] .bg-\[\#0B1120\],
+    [data-theme="future"] .bg-\[\#0B1120\]\/80,
+    [data-theme="future"] .bg-slate-900 {
+      background: linear-gradient(to bottom, #1a202a, #0e141d) !important;
+      border-color: #3b4a5d !important;
+    }
+
+    [data-theme="future"] input[type="number"],
+    [data-theme="future"] input[type="text"],
+    [data-theme="future"] select {
+      font-family: 'Share Tech Mono', monospace;
+      background: linear-gradient(to bottom, #040709, #0a0f16) !important;
+      color: #79e2ff !important;
+      border: 2px solid #2f3c4d !important;
+      border-radius: 0.45rem !important;
+      box-shadow: inset 0 3px 7px rgba(0,0,0,0.92), 0 0 10px rgba(0,207,255,0.12);
+    }
+    [data-theme="future"] #aiPromptInput {
+      color: #59ff6b !important;
+      background: linear-gradient(to bottom, #021005, #052010) !important;
+      border-color: #1f3d29 !important;
+      box-shadow: inset 0 2px 5px rgba(0,0,0,0.9), 0 0 10px rgba(79,255,120,0.2);
+    }
+
+    [data-theme="future"] .calculate-btn {
+      border: 2px solid #7c3f00;
+      color: #1d1306 !important;
+      text-shadow: 0 1px 0 rgba(255,255,255,0.35);
+      box-shadow: inset 0 1px 1px rgba(255,255,255,0.45), 0 0 14px rgba(255,140,0,0.45), 0 3px 9px rgba(0,0,0,0.6) !important;
+    }
+
+    [data-theme="future"] button[class*="bg-panel"],
+    [data-theme="future"] button[class*="bg-panel-light"],
+    [data-theme="future"] button[class*="bg-warning"],
+    [data-theme="future"] .bg-success,
+    [data-theme="future"] button[class*="bg-accent-secondary"] {
+      background: linear-gradient(to bottom, #2f3641, #161c26) !important;
+      border: 2px solid #516173 !important;
+      border-radius: 0.55rem !important;
+      color: #d9ecff !important;
+      font-family: 'Orbitron', 'Share Tech Mono', sans-serif;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      text-shadow: 0 0 8px rgba(0,207,255,0.4);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.2), 0 0 12px rgba(0,207,255,0.28), 0 3px 7px rgba(0,0,0,0.55);
+    }
+    [data-theme="future"] button[onclick="applyPreset()"],
+    [data-theme="future"] .calculate-btn {
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.3), 0 0 14px rgba(255,145,0,0.5), 0 4px 8px rgba(0,0,0,0.6) !important;
+    }
+    [data-theme="future"] button:hover { filter: brightness(1.12); }
+
+    [data-theme="future"] #saltMatrix > div {
+      border-radius: 0.55rem;
+      border: 1px solid #2a3340;
+      background: linear-gradient(to right, rgba(170, 189, 208, 0.08), rgba(60, 78, 100, 0.04));
+      position: relative;
+      padding-left: 2.4rem !important;
+    }
+    [data-theme="future"] #saltMatrix > div::before {
+      content: '';
+      position: absolute;
+      left: 0.85rem;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 0.9rem;
+      height: 0.9rem;
+      border-radius: 9999px;
+      background: radial-gradient(circle, #87ebff 25%, #0f8fb7 70%, #063547 100%);
+      box-shadow: 0 0 10px rgba(0, 207, 255, 0.6), inset 0 1px 2px rgba(255,255,255,0.5);
+    }
+
+    [data-theme="future"] .donut-ring {
+      border: 2px solid #1d2530;
+      box-shadow: inset 0 0 0 2px rgba(255,255,255,0.08), 0 0 12px rgba(0,207,255,0.24);
+    }
+    [data-theme="future"] .donut-ring::after {
+      background: #0e141c;
+      box-shadow: inset 0 0 8px rgba(0,0,0,0.8), 0 0 8px rgba(255,165,0,0.2);
+    }
+    [data-theme="future"] #donutLegend span:last-child { color: #7ad8ff !important; }
+
+    [data-theme="future"] .bar-fill {
+      border: 1px solid #11161f;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.28), 0 0 8px rgba(0,207,255,0.2);
+    }
+
+    [data-theme="future"] .future-rail-left,
+    [data-theme="future"] .future-rail-right {
+      position: absolute;
+      top: -6px;
+      bottom: -6px;
+      width: 4px;
+      border-radius: 4px;
+      z-index: 5;
+      pointer-events: none;
+    }
+    [data-theme="future"] .future-rail-left {
+      left: -4px;
+      background: #ff8f00;
+      box-shadow: 0 0 8px rgba(255,143,0,0.9), 0 0 16px rgba(255,143,0,0.7);
+    }
+    [data-theme="future"] .future-rail-right {
+      right: -4px;
+      background: #00d4ff;
+      box-shadow: 0 0 8px rgba(0,212,255,0.9), 0 0 16px rgba(0,212,255,0.7);
+    }
+
+    [data-theme="future"] .future-screw {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      border-radius: 9999px;
+      background: radial-gradient(circle, #cfd5de 15%, #7f8a98 45%, #3a424d 100%);
+      border: 1px solid #10141a;
+      box-shadow: inset 1px 1px 2px rgba(255,255,255,0.4), inset -1px -1px 2px rgba(0,0,0,0.7), 0 1px 2px rgba(0,0,0,0.55);
+      z-index: 6;
+      pointer-events: none;
+    }
+    [data-theme="future"] .future-screw::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 1px;
+      right: 1px;
+      height: 1px;
+      background: #1d232b;
+      transform: translateY(-50%) rotate(40deg);
+      opacity: 0.85;
+    }
+    [data-theme="future"] .future-screw-tl { top: 6px; left: 6px; }
+    [data-theme="future"] .future-screw-tr { top: 6px; right: 6px; }
+    [data-theme="future"] .future-screw-bl { bottom: 6px; left: 6px; }
+    [data-theme="future"] .future-screw-br { bottom: 6px; right: 6px; }
+
     /* === SEMANTIC CLASSES === */
     body { background-color: var(--color-bg); color: var(--color-text); }
 
@@ -427,6 +661,7 @@
     /* AI gradient text */
     .ai-gradient-text {
       background: linear-gradient(to right, #34d399, #818cf8, #14b8a6);
+      background-clip: text;
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -493,6 +728,7 @@
           <option value="original">Original</option>
           <option value="x-files">X-Files</option>
           <option value="alchemy">Alchemy</option>
+          <option value="future">Future</option>
         </select>
       </div>
     </header>
@@ -782,7 +1018,7 @@
     const R_GAS = 0.082057;
     const GROQ_PROXY_URL = 'https://groq-proxy.gregorymllr1.workers.dev';
     const GROQ_MODEL = 'openai/gpt-oss-120b';
-    const VALID_SKINS = ['electric-blue', 'original', 'x-files', 'alchemy'];
+    const VALID_SKINS = ['electric-blue', 'original', 'x-files', 'alchemy', 'future'];
 
     let lastPriceUpdate = 'Not updated in this session';
     let lastBatchResults = [];
@@ -887,12 +1123,15 @@
     }
 
     // ─── SKIN SWITCHER ────────────────────────────────────────────
-    function applyAlchemyScrollRolls() {
-      // Remove any existing rolls first
-      document.querySelectorAll('.alchemy-scroll-top, .alchemy-scroll-bottom').forEach(el => el.remove());
-      if (document.documentElement.getAttribute('data-theme') !== 'alchemy') return;
+    function clearThemeDecorations() {
+      document.querySelectorAll('.alchemy-scroll-top, .alchemy-scroll-bottom, .future-rail-left, .future-rail-right, .future-screw').forEach(el => el.remove());
       document.querySelectorAll('.neon-panel').forEach(panel => {
-        // Ensure panel can show overflow for the rolls (which extend outside bounds)
+        panel.style.removeProperty('overflow');
+      });
+    }
+
+    function applyAlchemyDecorations() {
+      document.querySelectorAll('.neon-panel').forEach(panel => {
         panel.style.overflow = 'visible';
         const top = document.createElement('div');
         top.className = 'alchemy-scroll-top';
@@ -903,10 +1142,39 @@
       });
     }
 
+    function applyFutureDecorations() {
+      document.querySelectorAll('.neon-panel').forEach(panel => {
+        panel.style.overflow = 'visible';
+
+        const railLeft = document.createElement('div');
+        railLeft.className = 'future-rail-left';
+        const railRight = document.createElement('div');
+        railRight.className = 'future-rail-right';
+        panel.appendChild(railLeft);
+        panel.appendChild(railRight);
+
+        ['tl', 'tr', 'bl', 'br'].forEach(corner => {
+          const screw = document.createElement('div');
+          screw.className = `future-screw future-screw-${corner}`;
+          panel.appendChild(screw);
+        });
+      });
+    }
+
+    function applyThemeDecorations() {
+      clearThemeDecorations();
+      const theme = document.documentElement.getAttribute('data-theme');
+      if (theme === 'alchemy') {
+        applyAlchemyDecorations();
+      } else if (theme === 'future') {
+        applyFutureDecorations();
+      }
+    }
+
     function applySkin(value) {
       document.documentElement.setAttribute('data-theme', value);
       localStorage.setItem('skin', value);
-      applyAlchemyScrollRolls();
+      applyThemeDecorations();
     }
 
     function initSkin() {
@@ -918,7 +1186,7 @@
       document.getElementById('skinSelect').addEventListener('change', function() {
         applySkin(this.value);
       });
-      applyAlchemyScrollRolls();
+      applyThemeDecorations();
     }
 
     // ─── BROWSER STORAGE ──────────────────────────────────────────
