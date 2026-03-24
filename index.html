@@ -9,7 +9,7 @@
   <!-- FOUC prevention: set data-theme from localStorage before first paint -->
   <script>
     (function () {
-      var VALID = ['electric-blue', 'original', 'x-files', 'alchemy', 'future'];
+      var VALID = ['electric-blue', 'original', 'x-files', 'alchemy', 'future', 'kill-bill'];
       var stored = localStorage.getItem('skin');
       var skin = VALID.indexOf(stored) !== -1 ? stored : 'electric-blue';
       if (VALID.indexOf(stored) === -1) localStorage.setItem('skin', 'electric-blue');
@@ -118,6 +118,21 @@
       --color-btn-calculate-from:   #ffd34d;
       --color-btn-calculate-to:     #ff7a00;
       --shadow-btn-calculate:       inset 0 1px 0 rgba(255,255,255,0.5), 0 0 15px rgba(255,153,0,0.45), 0 4px 10px rgba(0,0,0,0.55);
+    }
+
+    [data-theme="kill-bill"] {
+      --color-bg:               #0c0b00;
+      --color-panel:            rgba(22, 20, 0, 0.92);
+      --color-panel-light:      #261f00;
+      --color-accent:           #daf600;
+      --color-accent-secondary: #c8e000;
+      --color-border:           rgba(218, 246, 0, 0.38);
+      --color-text:             #f5f5e8;
+      --color-text-muted:       #8a8a50;
+      --shadow-glow:            0 0 18px rgba(218, 246, 0, 0.12), inset 0 0 10px rgba(218, 246, 0, 0.05);
+      --color-btn-calculate-from: #daf600;
+      --color-btn-calculate-to:   #a8c000;
+      --shadow-btn-calculate:   0 0 28px rgba(218, 246, 0, 0.6);
     }
 
     /* ─── X-FILES CRT DOSSIER OVERRIDES ─── */
@@ -1195,6 +1210,141 @@
       [data-theme="future"] header h1 { font-size: 1.55rem; }
     }
 
+    /* ─── KILL BILL OVERRIDES ─── */
+    [data-theme="kill-bill"] body {
+      font-family: 'Source Sans Pro', 'Segoe UI', sans-serif;
+      background-color: #0c0b00;
+      background-image:
+        radial-gradient(circle at 25% 10%, rgba(218, 246, 0, 0.04) 0%, transparent 28%),
+        radial-gradient(circle at 75% 88%, rgba(218, 246, 0, 0.025) 0%, transparent 20%),
+        linear-gradient(180deg, #0c0b00 0%, #060500 100%);
+      color: #f5f5e8;
+    }
+    [data-theme="kill-bill"] header h1 {
+      color: #ffffff !important;
+      font-style: italic;
+      font-weight: 900;
+      letter-spacing: 0.01em;
+      text-shadow: 0 0 24px rgba(218, 246, 0, 0.1);
+    }
+    [data-theme="kill-bill"] header p {
+      color: #8a8a50 !important;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-size: 0.7rem;
+    }
+    [data-theme="kill-bill"] .neon-panel {
+      border: 1px solid rgba(218, 246, 0, 0.38);
+      background: rgba(18, 16, 0, 0.92);
+      box-shadow: 0 0 16px rgba(218, 246, 0, 0.1), inset 0 0 8px rgba(218, 246, 0, 0.04);
+      backdrop-filter: blur(6px);
+    }
+    [data-theme="kill-bill"] .skin-select {
+      background: rgba(10, 9, 0, 0.95);
+      color: #daf600;
+      border-color: rgba(218, 246, 0, 0.55);
+      box-shadow: 0 0 10px rgba(218, 246, 0, 0.12);
+    }
+    [data-theme="kill-bill"] section h2 {
+      color: #daf600 !important;
+      font-size: 0.7rem !important;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+    }
+    [data-theme="kill-bill"] .text-white,
+    [data-theme="kill-bill"] .text-slate-300 { color: #f5f5e8 !important; }
+    [data-theme="kill-bill"] .text-slate-400,
+    [data-theme="kill-bill"] .text-slate-500,
+    [data-theme="kill-bill"] .text-text-muted { color: #8a8a50 !important; }
+    [data-theme="kill-bill"] [class*="border-slate-7"],
+    [data-theme="kill-bill"] [class*="border-slate-6"],
+    [data-theme="kill-bill"] .divide-y > :not([hidden]) ~ :not([hidden]),
+    [data-theme="kill-bill"] .divide-slate-800 > :not([hidden]) ~ :not([hidden]) {
+      border-color: rgba(218, 246, 0, 0.15) !important;
+    }
+    [data-theme="kill-bill"] .bg-panel-light\/40,
+    [data-theme="kill-bill"] .bg-panel-light\/30,
+    [data-theme="kill-bill"] .bg-panel,
+    [data-theme="kill-bill"] .bg-\[\#0f172a\],
+    [data-theme="kill-bill"] .bg-\[\#0B1120\],
+    [data-theme="kill-bill"] .bg-\[\#0B1120\]\/80,
+    [data-theme="kill-bill"] .bg-slate-900 {
+      background: rgba(14, 12, 0, 0.95) !important;
+      border-color: rgba(218, 246, 0, 0.18) !important;
+    }
+    [data-theme="kill-bill"] input[type="number"],
+    [data-theme="kill-bill"] input[type="text"],
+    [data-theme="kill-bill"] select {
+      background: rgba(10, 9, 0, 0.95) !important;
+      color: #daf600 !important;
+      border: 1px solid rgba(218, 246, 0, 0.4) !important;
+      box-shadow: inset 0 0 6px rgba(218, 246, 0, 0.03) !important;
+    }
+    [data-theme="kill-bill"] input::placeholder { color: rgba(218, 246, 0, 0.28) !important; }
+    [data-theme="kill-bill"] input:focus,
+    [data-theme="kill-bill"] select:focus {
+      border-color: #daf600 !important;
+      --tw-ring-color: rgba(218, 246, 0, 0.3) !important;
+      box-shadow: 0 0 10px rgba(218, 246, 0, 0.2) !important;
+    }
+    [data-theme="kill-bill"] input[type="checkbox"] { accent-color: #daf600 !important; }
+    [data-theme="kill-bill"] .calculate-btn {
+      color: #0c0b00 !important;
+      font-weight: 900;
+      font-style: italic;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-shadow: none !important;
+      border-color: #a8c000 !important;
+    }
+    [data-theme="kill-bill"] .calculate-btn svg { color: #0c0b00 !important; }
+    [data-theme="kill-bill"] button[class*="bg-panel"],
+    [data-theme="kill-bill"] button[class*="bg-panel-light"],
+    [data-theme="kill-bill"] button[class*="bg-warning"],
+    [data-theme="kill-bill"] button[class*="bg-accent-secondary"],
+    [data-theme="kill-bill"] .bg-success {
+      background: rgba(18, 16, 0, 0.9) !important;
+      border: 1px solid rgba(218, 246, 0, 0.5) !important;
+      color: #daf600 !important;
+      font-weight: 700;
+    }
+    [data-theme="kill-bill"] button:hover { filter: brightness(1.1); }
+    [data-theme="kill-bill"] #saltMatrix > div { background: transparent !important; }
+    [data-theme="kill-bill"] #saltMatrix .font-medium { color: #f5f5e8 !important; }
+    [data-theme="kill-bill"] .donut-ring {
+      border: 1px solid rgba(218, 246, 0, 0.5);
+      box-shadow: 0 0 16px rgba(218, 246, 0, 0.14);
+    }
+    [data-theme="kill-bill"] .donut-ring::after { background: #0c0b00; }
+    [data-theme="kill-bill"] #donutLegend span,
+    [data-theme="kill-bill"] #donutCenter { color: #f5f5e8 !important; }
+    [data-theme="kill-bill"] .bar-fill {
+      border-radius: 2px 2px 0 0 !important;
+      border: 1px solid rgba(218, 246, 0, 0.4);
+      box-shadow: 0 0 8px rgba(218, 246, 0, 0.2);
+    }
+    [data-theme="kill-bill"] .bar-item > span:first-child { color: #daf600 !important; }
+    [data-theme="kill-bill"] .hover\:bg-white\/5:hover,
+    [data-theme="kill-bill"] .hover\:bg-panel-light:hover { background-color: rgba(218, 246, 0, 0.05) !important; }
+    [data-theme="kill-bill"] .custom-scrollbar::-webkit-scrollbar-track { background: rgba(8, 7, 0, 0.95); }
+    [data-theme="kill-bill"] .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(218, 246, 0, 0.4); }
+    [data-theme="kill-bill"] .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(218, 246, 0, 0.65); }
+    [data-theme="kill-bill"] .ai-gradient-text {
+      background: linear-gradient(to right, #daf600, #ff8c00, #daf600);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    /* stat value displays */
+    [data-theme="kill-bill"] #sumMass,
+    [data-theme="kill-bill"] #sumCost,
+    [data-theme="kill-bill"] #sumPiAtm,
+    [data-theme="kill-bill"] #sumPiPsi {
+      color: #daf600 !important;
+      text-shadow: 0 0 12px rgba(218, 246, 0, 0.4);
+    }
+
     /* === SEMANTIC CLASSES === */
     body { background-color: var(--color-bg); color: var(--color-text); }
 
@@ -1306,6 +1456,7 @@
           <option value="x-files">X-Files</option>
           <option value="alchemy">Alchemy</option>
           <option value="future">Future</option>
+          <option value="kill-bill">Kill Bill</option>
         </select>
       </div>
     </header>
@@ -1595,7 +1746,7 @@
     const R_GAS = 0.082057;
     const GROQ_PROXY_URL = 'https://groq-proxy.gregorymllr1.workers.dev';
     const GROQ_MODEL = 'openai/gpt-oss-120b';
-    const VALID_SKINS = ['electric-blue', 'original', 'x-files', 'alchemy', 'future'];
+    const VALID_SKINS = ['electric-blue', 'original', 'x-files', 'alchemy', 'future', 'kill-bill'];
 
     let lastPriceUpdate = 'Not updated in this session';
     let lastBatchResults = [];
