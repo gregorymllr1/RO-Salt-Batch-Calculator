@@ -1767,6 +1767,20 @@
       'H3BO3':      { MW_anhydrous: 61.83,  MW_hydrate: 61.83,  i: 1, price_per_g: 0.1268,  price_source: 'Sigma B0394-5KG, 5 kg, $634 (table default)' },
       'NaF':        { MW_anhydrous: 41.99,  MW_hydrate: 41.99,  i: 2, price_per_g: 0.33,    price_source: 'Sigma 201154-500G, 500 g, $165 (table default)' },
       'Ba(NO3)2':   { MW_anhydrous: 261.34, MW_hydrate: 261.34, i: 3, price_per_g: 0.4,     price_source: 'Sigma 217581-500G, 500 g, $200 (table default)' },
+      'MnCl2·4H2O': { MW_anhydrous: 125.84, MW_hydrate: 197.91, i: 3, price_per_g: 0,       price_source: 'Price TBD' },
+      'CuCl2·2H2O': { MW_anhydrous: 134.45, MW_hydrate: 170.48, i: 3, price_per_g: 0,       price_source: 'Price TBD' },
+      'ZnSO4·7H2O': { MW_anhydrous: 161.47, MW_hydrate: 287.56, i: 2, price_per_g: 0,       price_source: 'Price TBD' },
+      'Pb(NO3)2':   { MW_anhydrous: 331.21, MW_hydrate: 331.21, i: 3, price_per_g: 0,       price_source: 'Price TBD' },
+      'AgNO3':      { MW_anhydrous: 169.87, MW_hydrate: 169.87, i: 2, price_per_g: 0,       price_source: 'Price TBD' },
+      'LiNO3':      { MW_anhydrous: 68.95,  MW_hydrate: 68.95,  i: 2, price_per_g: 0,       price_source: 'Price TBD' },
+      'Na2MoO4·2H2O': { MW_anhydrous: 205.92, MW_hydrate: 241.95, i: 3, price_per_g: 0,     price_source: 'Price TBD' },
+      'NiSO4·6H2O': { MW_anhydrous: 154.76, MW_hydrate: 262.85, i: 2, price_per_g: 0,       price_source: 'Price TBD' },
+      'Na2SiO3·9H2O': { MW_anhydrous: 122.06, MW_hydrate: 284.20, i: 3, price_per_g: 0,     price_source: 'Price TBD' },
+      'FeCl3·6H2O': { MW_anhydrous: 162.20, MW_hydrate: 270.30, i: 4, price_per_g: 0,       price_source: 'Price TBD' },
+      'Na2CO3':     { MW_anhydrous: 105.99, MW_hydrate: 105.99, i: 3, price_per_g: 0,       price_source: 'Price TBD' },
+      'NH4Cl':      { MW_anhydrous: 53.49,  MW_hydrate: 53.49,  i: 2, price_per_g: 0,       price_source: 'Price TBD' },
+      'NaNO3':      { MW_anhydrous: 84.99,  MW_hydrate: 84.99,  i: 2, price_per_g: 0,       price_source: 'Price TBD' },
+      'NaH2PO4·H2O': { MW_anhydrous: 119.98, MW_hydrate: 138.00, i: 2, price_per_g: 0,      price_source: 'Price TBD' },
     };
 
     const defaultPriceMemory = JSON.parse(JSON.stringify(saltDb));
@@ -1784,15 +1798,37 @@
       'H3BO3':      [{ supplier: 'Sigma',         catalog: 'B0394-5KG',    pack_kg: 5.0,   price_usd: 634.0 }],
       'NaF':        [{ supplier: 'Sigma',         catalog: '201154-500G',  pack_kg: 0.5,   price_usd: 165.0 }],
       'Ba(NO3)2':   [{ supplier: 'Sigma',         catalog: '217581-500G',  pack_kg: 0.5,   price_usd: 200.0 }],
+      'MnCl2·4H2O': [],
+      'CuCl2·2H2O': [],
+      'ZnSO4·7H2O': [],
+      'Pb(NO3)2': [],
+      'AgNO3': [],
+      'LiNO3': [],
+      'Na2MoO4·2H2O': [],
+      'NiSO4·6H2O': [],
+      'Na2SiO3·9H2O': [],
+      'FeCl3·6H2O': [],
+      'Na2CO3': [],
+      'NH4Cl': [],
+      'NaNO3': [],
+      'NaH2PO4·H2O': [],
     };
 
     const defaultPresets = {
       '2000 ppm NaCl':   { 'NaCl': 2000.0 },
       '2000 ppm MgSO4':  { 'MgSO4': 2000.0 },
       'Poseidon Sea Salt': {
-        'MgCl2·6H2O': 5200.0, 'CaCl2·2H2O': 1160.0, 'SrCl2·6H2O': 25.0,
+        'MgCl2·6H2O': 5200.0, 'CaCl2·2H2O': 1160.0, 'SrCl2·6H2O': 2.5,
         'KCl': 695.0, 'NaHCO3': 201.0, 'KBr': 101.0, 'H3BO3': 27.0,
         'NaF': 3.0, 'NaCl': 24530.0, 'Na2SO4': 4090.0, 'Ba(NO3)2': 0.0994,
+      },
+      // ASTM D1141-98(2021) synthetic seawater. ASTM notes trace elements below 0.005 mg/L are not included.
+      'ASTM D1141-98': {
+        'NaCl': 24530.0, 'MgCl2·6H2O': 5200.0, 'Na2SO4': 4090.0, 'CaCl2·2H2O': 1160.0,
+        'KCl': 695.0, 'NaHCO3': 201.0, 'KBr': 101.0, 'H3BO3': 27.0, 'NaF': 3.0,
+        'SrCl2·6H2O': 14.9,
+        'Ba(NO3)2': 0.0994, 'MnCl2·4H2O': 0.0360, 'ZnSO4·7H2O': 0.0100,
+        'LiNO3': 0.0994, 'Na2MoO4·2H2O': 0.00994,
       }
     };
 
@@ -2026,11 +2062,12 @@
       tbody.innerHTML = '';
       Object.keys(saltDb).forEach(saltName => {
         const props = saltDb[saltName];
+        const priceDisplay = props.price_per_g > 0 ? `$${props.price_per_g.toFixed(4)}` : 'TBD';
         const tr = document.createElement('tr');
         tr.className = 'hover:bg-white/5 transition-colors';
         tr.innerHTML = `
           <td class="p-3 font-medium text-slate-300">${saltName}</td>
-          <td class="p-3 text-right text-accent font-semibold">$${props.price_per_g.toFixed(4)}</td>
+          <td class="p-3 text-right text-accent font-semibold">${priceDisplay}</td>
           <td class="p-3 text-slate-400">${props.price_source || 'N/A'}</td>
         `;
         tbody.appendChild(tr);
@@ -2285,13 +2322,14 @@
       const tbody = document.getElementById('resultsTableBody');
       tbody.innerHTML = '';
       lastBatchResults.forEach(row => {
+        const hasPrice = saltDb[row.salt] && saltDb[row.salt].price_per_g > 0;
         const tr = document.createElement('tr');
         tr.className = 'hover:bg-white/5 transition-colors';
         tr.innerHTML = `
           <td class="py-2.5 px-1 font-medium text-slate-300">${row.salt}</td>
           <td class="py-2.5 px-1 text-right text-slate-300">${row.target_ppm.toLocaleString(undefined, { maximumFractionDigits: 1 })}</td>
           <td class="py-2.5 px-1 text-right font-bold text-accent">${row.mass_to_weigh_g.toLocaleString(undefined, { minimumFractionDigits: 3, maximumFractionDigits: 3 })}</td>
-          <td class="py-2.5 px-1 text-right text-slate-300">$${row.cost_usd.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}</td>
+          <td class="py-2.5 px-1 text-right text-slate-300">${hasPrice ? `$${row.cost_usd.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 4 })}` : 'N/A'}</td>
           <td class="py-2.5 px-1 text-right text-slate-300">${row.pi_contribution_atm.toLocaleString(undefined, { minimumFractionDigits: 5, maximumFractionDigits: 5 })}</td>
         `;
         tbody.appendChild(tr);
@@ -2300,14 +2338,16 @@
 
     // ─── CHART RENDERERS ──────────────────────────────────────────
     const CHART_COLORS = [
-      '#38bdf8', '#818cf8', '#34d399', '#fbbf24', '#f87171',
-      '#a78bfa', '#22d3ee', '#fb923c', '#4ade80', '#e879f9',
-      '#f472b6', '#60a5fa'
+      '#38bdf8', '#818cf8', '#34d399', '#fbbf24', '#f87171', '#a78bfa', '#22d3ee', '#fb923c', '#4ade80',
+      '#e879f9', '#f472b6', '#60a5fa', '#10b981', '#f59e0b', '#ec4899', '#06b6d4', '#84cc16', '#f97316',
+      '#14b8a6', '#ef4444', '#8b5cf6', '#0ea5e9', '#a3e635', '#fb7185', '#2dd4bf', '#6366f1', '#f43f5e',
+      '#22c55e'
     ];
     const ALCHEMY_CHART_COLORS = [
-      '#b08b5f', '#a8bfa1', '#e0cdad', '#d4b572', '#8a9f84',
-      '#6e5033', '#c2a878', '#829c7b', '#f4eccf', '#5c452e',
-      '#a38965', '#d6b582'
+      '#b08b5f', '#a8bfa1', '#e0cdad', '#d4b572', '#8a9f84', '#6e5033', '#c2a878', '#829c7b', '#f4eccf',
+      '#5c452e', '#a38965', '#d6b582', '#7a5f3f', '#bea57d', '#94ab8d', '#9f7a4f', '#ddd0b0', '#6b4f31',
+      '#c8af86', '#8d7656', '#e7dac0', '#728a6d', '#af946f', '#d1be99', '#5f4730', '#b69e79', '#8aa286',
+      '#ccb48c'
     ];
     function getChartColors() {
       return document.documentElement.getAttribute('data-theme') === 'alchemy' ? ALCHEMY_CHART_COLORS : CHART_COLORS;
@@ -2368,9 +2408,28 @@
         return;
       }
 
-      const maxCost = Math.max(...results.map(r => r.cost_usd), 0.0001);
+      const pricedResults = results.filter(r => (saltDb[r.salt] && saltDb[r.salt].price_per_g > 0));
+      const unpricedCount = results.length - pricedResults.length;
 
-      const barsHTML = results.map((r, i) => {
+      if (!pricedResults.length) {
+        container.innerHTML = `
+          <div class="absolute inset-0 flex flex-col justify-between pb-7 pointer-events-none">
+            <div class="w-full border-t border-slate-700/50"></div>
+            <div class="w-full border-t border-slate-700/50"></div>
+            <div class="w-full border-t border-slate-700/50"></div>
+            <div class="w-full border-t border-slate-700/50"></div>
+            <div class="w-full border-t border-slate-700/50"></div>
+            <div class="w-full border-t border-slate-600"></div>
+          </div>
+          <div class="absolute inset-0 flex items-center justify-center pb-7">
+            <span class="text-xs text-slate-600 italic">No priced salts in this batch yet (all marked TBD).</span>
+          </div>`;
+        return;
+      }
+
+      const maxCost = Math.max(...pricedResults.map(r => r.cost_usd), 0.0001);
+
+      const barsHTML = pricedResults.map((r, i) => {
         const heightPct = Math.max((r.cost_usd / maxCost) * 100, 1);
         const colors = getChartColors();
         const color = colors[i % colors.length];
@@ -2393,7 +2452,11 @@
           <div class="w-full border-t border-slate-600"></div>
         </div>`;
 
-      container.innerHTML = gridLines + barsHTML;
+      const unpricedNotice = unpricedCount > 0
+        ? `<div class="absolute right-2 top-1 text-[10px] text-slate-500">${unpricedCount} salt(s) omitted (TBD pricing)</div>`
+        : '';
+
+      container.innerHTML = gridLines + unpricedNotice + barsHTML;
     }
 
     // ─── AI FEATURES ──────────────────────────────────────────────

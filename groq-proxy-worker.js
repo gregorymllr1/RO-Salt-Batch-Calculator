@@ -4,15 +4,19 @@
 
 export default {
   async fetch(request, env) {
-    const allowedOrigin = 'https://gregorymllr1.github.io';
+    const allowedOrigins = [
+      'https://saltbatchcalculator.org',
+      'https://gregorymllr1.github.io',
+    ];
     const origin = request.headers.get('Origin');
+    const isAllowed = allowedOrigins.includes(origin);
 
     // CORS preflight
     if (request.method === 'OPTIONS') {
-      if (origin === allowedOrigin) {
+      if (isAllowed) {
         return new Response(null, {
           headers: {
-            'Access-Control-Allow-Origin': allowedOrigin,
+            'Access-Control-Allow-Origin': origin,
             'Access-Control-Allow-Methods': 'POST',
             'Access-Control-Allow-Headers': 'Content-Type',
             'Access-Control-Max-Age': '86400',
@@ -22,8 +26,8 @@ export default {
       return new Response('Forbidden', { status: 403 });
     }
 
-    // Block anything not POST from the allowed origin
-    if (request.method !== 'POST' || origin !== allowedOrigin) {
+    // Block anything not POST from an allowed origin
+    if (request.method !== 'POST' || !isAllowed) {
       return new Response('Forbidden', { status: 403 });
     }
 
@@ -43,7 +47,7 @@ export default {
       status: groqResponse.status,
       headers: {
         'Content-Type': 'application/json',
-        'Access-Control-Allow-Origin': allowedOrigin,
+        'Access-Control-Allow-Origin': origin,
       },
     });
   },
