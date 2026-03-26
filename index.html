@@ -1781,6 +1781,10 @@
       'NH4Cl':      { MW_anhydrous: 53.49,  MW_hydrate: 53.49,  i: 2, price_per_g: 0,       price_source: 'Price TBD' },
       'NaNO3':      { MW_anhydrous: 84.99,  MW_hydrate: 84.99,  i: 2, price_per_g: 0,       price_source: 'Price TBD' },
       'NaH2PO4·H2O': { MW_anhydrous: 119.98, MW_hydrate: 138.00, i: 2, price_per_g: 0,      price_source: 'Price TBD' },
+      // Added nitrate hydrates from TSV
+      'Zn(NO3)2·6H2O': { MW_anhydrous: 189.36, MW_hydrate: 297.49, i: 3, price_per_g: 0.302, price_source: 'Salt Price List.tsv, https://www.sigmaaldrich.com/US/en/product/sigald/228737' },
+      'Mn(NO3)2·H2O':  { MW_anhydrous: 178.95, MW_hydrate: 196.96, i: 3, price_per_g: 0.218, price_source: 'Salt Price List.tsv, https://www.sigmaaldrich.com/US/en/product/aldrich/288640' },
+      'Cu(NO3)2·3H2O': { MW_anhydrous: 187.56, MW_hydrate: 241.60, i: 3, price_per_g: 0.1452, price_source: 'Salt Price List.tsv, https://www.laballey.com/products/copper-nitrate-crystal-purified?selected=C3322-500G' },
     };
 
     const defaultPriceMemory = JSON.parse(JSON.stringify(saltDb));
@@ -1801,6 +1805,10 @@
       'MnCl2·4H2O': [],
       'CuCl2·2H2O': [],
       'ZnSO4·7H2O': [],
+      // Added nitrate hydrates from TSV
+      'Zn(NO3)2·6H2O': [{ supplier: 'Salt Price List', catalog: 'https://www.sigmaaldrich.com/US/en/product/sigald/228737', pack_kg: 1.0, price_usd: 302.0 }],
+      'Mn(NO3)2·H2O':  [{ supplier: 'Salt Price List', catalog: 'https://www.sigmaaldrich.com/US/en/product/aldrich/288640', pack_kg: 1.0, price_usd: 218.0 }],
+      'Cu(NO3)2·3H2O': [{ supplier: 'Salt Price List', catalog: 'https://www.laballey.com/products/copper-nitrate-crystal-purified?selected=C3322-500G', pack_kg: 1.0, price_usd: 145.2 }],
       'Pb(NO3)2':   [{ supplier: 'Salt Price List', catalog: 'https://www.laballey.com/products/lead-nitrate-crystal-acs?selected=C4790-500g',                                                           pack_kg: 1.0, price_usd: 314.6    }],
       'AgNO3':      [{ supplier: 'Salt Price List', catalog: 'https://www.laballey.com/products/silver-nitrate-crystal-anhydrous-acs?selected=SINIGA-5G',                                                pack_kg: 1.0, price_usd: 21600.0  }],
       'LiNO3': [],
