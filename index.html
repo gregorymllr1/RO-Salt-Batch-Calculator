@@ -818,20 +818,26 @@
       box-shadow: inset 0 1px 2px rgba(255,255,255,0.12), 0 0 10px rgba(0,207,255,0.15);
     }
 
+    [data-theme="future"] .app-header {
+      flex-direction: column;
+      align-items: center;
+      position: relative;
+    }
+    [data-theme="future"] .app-header > div:first-child { display: none; }
+    [data-theme="future"] .app-header > div:nth-child(2) { text-align: center; }
     [data-theme="future"] header h1 {
-      font-size: 2.15rem;
-      line-height: 0.9;
-      font-weight: 900;
-      letter-spacing: 0.02em;
-      text-transform: uppercase;
-      transform: skewX(-7deg);
-      transform-origin: left center;
-      background: linear-gradient(to bottom, #fff08d, #ff8b1d 62%, #ff3a24);
-      background-clip: text;
-      -webkit-background-clip: text;
+      font-size: 0;
+      line-height: 0;
+      display: block;
+      width: min(100%, 36rem);
+      height: 0;
+      padding-top: calc(min(100%, 36rem) * 1056 / 4090);
+      background-image: url("Future/Future%20Header%20Words.png");
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
       -webkit-text-fill-color: transparent;
-      -webkit-text-stroke: 1px rgba(17, 23, 31, 0.75);
-      text-shadow: 1px 2px 0 rgba(0,0,0,0.82), 0 0 16px rgba(255,128,0,0.5);
+      color: transparent;
     }
     [data-theme="future"] header p {
       color: #9bb3cf;
@@ -840,6 +846,11 @@
       font-size: 0.66rem;
       letter-spacing: 0.11em;
       font-style: italic;
+    }
+    [data-theme="future"] .app-header .ml-auto {
+      position: absolute;
+      right: 0.5rem;
+      top: 0.5rem;
     }
 
     [data-theme="future"] section h2 {
@@ -1227,7 +1238,7 @@
       [data-theme="future"] .future-module-badge,
       [data-theme="future"] .future-connector,
       [data-theme="future"] .future-arc { display: none; }
-      [data-theme="future"] header h1 { font-size: 1.55rem; }
+      [data-theme="future"] header h1 { width: min(100%, 24rem); padding-top: calc(min(100%, 24rem) * 1056 / 4090); }
     }
 
     /* ─── KILL BILL OVERRIDES ─── */
