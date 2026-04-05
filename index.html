@@ -1366,16 +1366,10 @@
     }
 
     /* ─── NOUVEAU ORNATE ART NOUVEAU OVERRIDES ─── */
+    /* Faithful recreation of the Art Nouveau mockup — single-column portrait layout */
 
     /* --- Nouveau image asset references --- */
-    /* PNG artwork in Nouveau/ folder */
     [data-theme="nouveau"] {
-      --nouveau-corner: url("Nouveau/Flower%20frame%20smaller.png");
-      --nouveau-flower: url("Nouveau/Flower%20frame%20smaller.png");
-      --nouveau-vine-v: url("Nouveau/Flower%20frame%20smaller.png");
-      --nouveau-divider: url("Nouveau/bottom%20banner.png");
-      --nouveau-bird: url("Nouveau/Flower%20frame%20smaller.png");
-      --nouveau-side-vine: url("Nouveau/Flower%20frame%20smaller.png");
       --nouveau-peacock-left: url("Nouveau/left%20peacock.png");
       --nouveau-peacock-right: url("Nouveau/right%20peacock.png");
       --nouveau-medallion: url("Nouveau/middle%20circle.png");
@@ -1383,83 +1377,85 @@
       --nouveau-top-banner: url("Nouveau/top%20banner.png");
       --nouveau-bottom-banner: url("Nouveau/bottom%20banner.png");
       --nouveau-panel-frame: url("Nouveau/Salt%20Matrix%20Frame.png");
+      --nouveau-flower-frame: url("Nouveau/Flower%20frame%20smaller.png");
     }
 
+    /* ─── Body & Background ─── */
     [data-theme="nouveau"] body {
       font-family: 'Cormorant Garamond', 'Times New Roman', serif;
       background-color: #f4ecd8;
-      background-image:
-        radial-gradient(circle at 50% 0%, rgba(93,116,101,0.06) 0%, transparent 40%),
-        radial-gradient(circle at 8% 50%, rgba(201,139,95,0.08) 0%, transparent 30%),
-        radial-gradient(circle at 92% 50%, rgba(201,139,95,0.08) 0%, transparent 30%),
-        linear-gradient(180deg, #f6eed9 0%, #f4ecd8 30%, #eddfc5 70%, #e6d5b3 100%);
+      background-image: linear-gradient(180deg, #f6eed9 0%, #f4ecd8 30%, #eddfc5 70%, #e6d5b3 100%);
       color: #3e3223;
       letter-spacing: 0.01em;
     }
 
-    /* Ornate border frame — uses border-frame.png if available, falls back to CSS */
-    [data-theme="nouveau"] body::before {
+    /* Remove old CSS-drawn borders — the Full Frame PNG replaces them */
+    [data-theme="nouveau"] body::before { display: none !important; }
+    [data-theme="nouveau"] body::after { display: none !important; }
+
+    /* ─── App Shell — frame container ─── */
+    [data-theme="nouveau"] .app-shell {
+      position: relative;
+      z-index: 1;
+      max-width: 52rem;
+      padding: 4.5rem 5rem 4rem;
+    }
+
+    /* Full Frame.png as page border */
+    [data-theme="nouveau"] .app-shell::before {
       content: '';
-      position: fixed;
+      position: absolute;
       inset: 0;
       background-image: var(--nouveau-border-frame);
       background-size: 100% 100%;
       background-repeat: no-repeat;
       pointer-events: none;
       z-index: 0;
-      /* Fallback border if image hasn't loaded */
-      border: 8px solid #5d7465;
-      border-radius: 24px;
-      margin: 6px;
-      box-shadow:
-        inset 0 0 0 2px rgba(255,255,255,0.15),
-        inset 0 0 30px rgba(93,116,101,0.12),
-        0 0 0 2px rgba(93,116,101,0.3),
-        0 8px 32px rgba(62,50,35,0.25);
     }
 
-    /* Inner decorative frame line (hidden when border-frame.png is present) */
-    [data-theme="nouveau"] body::after {
-      content: '';
-      position: fixed;
-      inset: 20px;
-      border: 2px solid #8c7d63;
-      border-radius: 18px;
-      pointer-events: none;
-      z-index: 0;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.2);
-    }
-
-    [data-theme="nouveau"] .app-shell {
+    /* ─── SINGLE-COLUMN LAYOUT — Faithful to mockup ─── */
+    [data-theme="nouveau"] .main-grid {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      gap: 1.2rem !important;
       position: relative;
       z-index: 1;
-      padding-top: 1.5rem;
-      padding-bottom: 2.5rem;
     }
 
-    /* Header */
+    /* Flatten column wrappers so children participate in parent grid */
+    [data-theme="nouveau"] .left-column,
+    [data-theme="nouveau"] .right-column {
+      display: contents !important;
+    }
+
+    /* Section ordering — matches mockup top-to-bottom */
+    [data-theme="nouveau"] .section-summary        { order: 1; grid-column: 1 / -1; }
+    [data-theme="nouveau"] .section-donut           { order: 2; grid-column: 1 / -1; }
+    [data-theme="nouveau"] .section-global          { order: 3; grid-column: 1; }
+    [data-theme="nouveau"] .section-matrix          { order: 4; grid-column: 2; }
+    [data-theme="nouveau"] .section-presets         { order: 5; grid-column: 1 / -1; }
+    [data-theme="nouveau"] .section-actions         { order: 6; grid-column: 1 / -1; }
+    [data-theme="nouveau"] .section-composition     { order: 7; grid-column: 1 / -1; }
+    [data-theme="nouveau"] .section-price-breakdown { order: 8; grid-column: 1 / -1; }
+
+    /* ─── Header ─── */
     [data-theme="nouveau"] .app-header {
       position: relative;
       justify-content: center;
-      min-height: 5.5rem;
+      min-height: 5rem;
       padding-top: 0.5rem;
       padding-bottom: 0.5rem;
       margin-bottom: 0.5rem;
       z-index: 1;
     }
 
-    [data-theme="nouveau"] .app-header > div:first-child {
-      display: none;
-    }
-
-    [data-theme="nouveau"] .app-header > div:nth-child(2) {
-      text-align: center;
-    }
+    [data-theme="nouveau"] .app-header > div:first-child { display: none; }
+    [data-theme="nouveau"] .app-header > div:nth-child(2) { text-align: center; }
 
     [data-theme="nouveau"] .app-header h1 {
       font-family: 'Cinzel Decorative', 'Marcellus SC', serif;
       color: #3e3223 !important;
-      font-size: clamp(2.2rem, 5vw, 3.6rem);
+      font-size: clamp(2rem, 4.5vw, 3.2rem);
       line-height: 1.05;
       letter-spacing: 0.03em;
       text-shadow: 0 2px 0 rgba(255,255,255,0.5), 0 4px 16px rgba(93,116,101,0.15);
@@ -1474,6 +1470,7 @@
       margin-top: 0.6rem;
     }
 
+    /* Skin selector — top-right pill */
     [data-theme="nouveau"] .app-header .ml-auto {
       position: absolute;
       right: 0;
@@ -1511,19 +1508,7 @@
       box-shadow: 0 0 0 2px rgba(93,116,101,0.35);
     }
 
-    [data-theme="nouveau"] .main-grid,
-    [data-theme="nouveau"] .left-column,
-    [data-theme="nouveau"] .right-column {
-      position: relative;
-      z-index: 1;
-    }
-
-    [data-theme="nouveau"] .left-column,
-    [data-theme="nouveau"] .right-column {
-      gap: 1.5rem !important;
-    }
-
-    /* Panels — ornate with corners */
+    /* ─── Panels ─── */
     [data-theme="nouveau"] .neon-panel {
       position: relative;
       overflow: visible !important;
@@ -1536,29 +1521,13 @@
       backdrop-filter: none;
     }
 
-    /* Corner ornament decorations via JS — styled here */
-    [data-theme="nouveau"] .nouveau-corner {
-      position: absolute;
-      width: 3.2rem;
-      height: 3.2rem;
-      pointer-events: none;
-      z-index: 4;
-      background-image: var(--nouveau-corner);
-      background-size: contain;
-      background-repeat: no-repeat;
-    }
-    [data-theme="nouveau"] .nouveau-corner-tl { top: -0.6rem; left: -0.6rem; transform: rotate(0deg); }
-    [data-theme="nouveau"] .nouveau-corner-tr { top: -0.6rem; right: -0.6rem; transform: scaleX(-1); }
-    [data-theme="nouveau"] .nouveau-corner-bl { bottom: -0.6rem; left: -0.6rem; transform: scaleY(-1); }
-    [data-theme="nouveau"] .nouveau-corner-br { bottom: -0.6rem; right: -0.6rem; transform: scale(-1,-1); }
-
     /* Ornate medallion circles at panel corners */
     [data-theme="nouveau"] .neon-panel::before,
     [data-theme="nouveau"] .neon-panel::after {
       content: '';
       position: absolute;
-      width: 1.6rem;
-      height: 1.6rem;
+      width: 1.4rem;
+      height: 1.4rem;
       border: 2px solid #5d7465;
       border-radius: 999px;
       background: radial-gradient(circle, #f8f1de 30%, #b9a17c 31% 50%, #2f7f81 51% 68%, #5d7465 69% 78%, transparent 79%);
@@ -1567,17 +1536,10 @@
       z-index: 5;
     }
 
-    [data-theme="nouveau"] .neon-panel::before {
-      top: -0.55rem;
-      left: -0.55rem;
-    }
+    [data-theme="nouveau"] .neon-panel::before { top: -0.5rem; left: -0.5rem; }
+    [data-theme="nouveau"] .neon-panel::after { right: -0.5rem; bottom: -0.5rem; }
 
-    [data-theme="nouveau"] .neon-panel::after {
-      right: -0.55rem;
-      bottom: -0.55rem;
-    }
-
-    /* Section headings — ornate framed style */
+    /* ─── Section Headings ─── */
     [data-theme="nouveau"] .section-summary h2,
     [data-theme="nouveau"] .section-global h2,
     [data-theme="nouveau"] .section-presets h2,
@@ -1592,20 +1554,19 @@
       min-height: 2.2rem;
       margin-left: auto;
       margin-right: auto;
-      padding: 0.2rem 1.6rem 0.35rem;
+      padding: 0.2rem 1.4rem 0.35rem;
       border: 2px solid #5d7465;
       border-radius: 6px;
       background: linear-gradient(180deg, #f7ecd4 0%, #e3cda5 100%);
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.6), 0 3px 8px rgba(93,116,101,0.14);
       font-family: 'Cinzel Decorative', 'Marcellus SC', serif;
-      font-size: 0.82rem !important;
+      font-size: 0.78rem !important;
       letter-spacing: 0.1em;
       text-transform: uppercase;
       color: #3e3223 !important;
       position: relative;
     }
 
-    /* Ornate notch on section headings */
     [data-theme="nouveau"] .section-summary h2::before,
     [data-theme="nouveau"] .section-global h2::before,
     [data-theme="nouveau"] .section-presets h2::before,
@@ -1636,7 +1597,7 @@
       display: inline-block;
     }
 
-    /* Stat cards */
+    /* ─── Batch Summary stat cards ─── */
     [data-theme="nouveau"] .section-summary .grid > div {
       background: #eaddc0;
       border: 1px solid #8c7d63 !important;
@@ -1666,16 +1627,13 @@
       text-shadow: 0 1px 0 rgba(255,255,255,0.5);
     }
 
+    /* ─── Color overrides ─── */
     [data-theme="nouveau"] .text-white,
-    [data-theme="nouveau"] .text-slate-300 {
-      color: #3e3223 !important;
-    }
+    [data-theme="nouveau"] .text-slate-300 { color: #3e3223 !important; }
 
     [data-theme="nouveau"] .text-slate-400,
     [data-theme="nouveau"] .text-slate-500,
-    [data-theme="nouveau"] .text-text-muted {
-      color: #6b5a45 !important;
-    }
+    [data-theme="nouveau"] .text-text-muted { color: #6b5a45 !important; }
 
     [data-theme="nouveau"] [class*="border-slate-7"],
     [data-theme="nouveau"] [class*="border-slate-6"],
@@ -1695,7 +1653,7 @@
       border-color: rgba(140,125,99,0.3) !important;
     }
 
-    /* Inputs */
+    /* ─── Inputs ─── */
     [data-theme="nouveau"] input[type="number"],
     [data-theme="nouveau"] input[type="text"],
     [data-theme="nouveau"] select {
@@ -1724,6 +1682,8 @@
       accent-color: #5b8a7c !important;
     }
 
+    /* ─── Buttons ─── */
+
     /* AI Generate button */
     [data-theme="nouveau"] #btnGenerateAI {
       background: linear-gradient(180deg, #5b8a7c 0%, #3a5c53 100%) !important;
@@ -1736,11 +1696,12 @@
       box-shadow: 0 4px 10px rgba(45,70,63,0.3) !important;
     }
 
-    /* Calculate button — teal ornate ribbon banner */
+    /* Calculate Batch — prominent teal ribbon (matches mockup) */
     [data-theme="nouveau"] .calculate-btn {
       position: relative;
       overflow: visible;
-      max-width: 24rem;
+      width: 100%;
+      max-width: none;
       margin-left: auto;
       margin-right: auto;
       border: 2px solid #2d463f !important;
@@ -1754,9 +1715,11 @@
       box-shadow:
         inset 0 1px 0 rgba(255,255,255,0.25),
         0 6px 18px rgba(45,70,63,0.35) !important;
+      padding: 0.8rem 2rem !important;
+      font-size: 1.05rem !important;
     }
 
-    /* Ribbon end-caps on calculate button */
+    /* Ribbon end-caps */
     [data-theme="nouveau"] .calculate-btn::before,
     [data-theme="nouveau"] .calculate-btn::after {
       content: '';
@@ -1772,7 +1735,6 @@
       left: -1.2rem;
       background: linear-gradient(180deg, #5b8a7c 0%, #3a5c53 100%);
       clip-path: polygon(100% 0, 100% 100%, 0 50%);
-      border-left: none;
     }
 
     [data-theme="nouveau"] .calculate-btn::after {
@@ -1796,20 +1758,16 @@
       box-shadow: inset 0 1px 0 rgba(255,255,255,0.45), 0 2px 6px rgba(62,50,35,0.15) !important;
     }
 
-    [data-theme="nouveau"] button:hover {
-      filter: brightness(1.06);
-    }
+    [data-theme="nouveau"] button:hover { filter: brightness(1.06); }
 
-    /* Salt Matrix rows */
+    /* ─── Salt Matrix ─── */
     [data-theme="nouveau"] .section-matrix > div:first-child {
       background: rgba(234,221,192,0.6) !important;
       border-bottom: 1px solid rgba(140,125,99,0.35) !important;
       border-radius: 18px 18px 0 0;
     }
 
-    [data-theme="nouveau"] .section-matrix > div:first-child h2 {
-      margin-left: 0;
-    }
+    [data-theme="nouveau"] .section-matrix > div:first-child h2 { margin-left: 0; }
 
     [data-theme="nouveau"] #saltMatrix > div {
       border: 1px solid rgba(140,125,99,0.4);
@@ -1838,12 +1796,13 @@
       font-weight: 700;
     }
 
-    /* ─── DONUT CHART — Ornate medallion frame ─── */
+    /* ─── DONUT CHART — Large centerpiece with medallion ─── */
     [data-theme="nouveau"] .section-donut {
       position: relative;
       overflow: visible !important;
-      padding-top: 1.5rem !important;
-      padding-bottom: 1.5rem !important;
+      padding-top: 2rem !important;
+      padding-bottom: 2rem !important;
+      min-height: 22rem;
     }
 
     [data-theme="nouveau"] .section-donut .flex.items-center {
@@ -1853,12 +1812,12 @@
 
     [data-theme="nouveau"] .section-donut .relative.flex-shrink-0,
     [data-theme="nouveau"] #donutChart {
-      width: 16rem;
-      height: 16rem;
+      width: 18rem;
+      height: 18rem;
       max-width: 100%;
     }
 
-    /* Ornate ring around donut */
+    /* Donut ring styling */
     [data-theme="nouveau"] .donut-ring {
       border: 6px solid #5d7465 !important;
       box-shadow:
@@ -1868,7 +1827,6 @@
         0 8px 24px rgba(62,50,35,0.2);
     }
 
-    /* Inner decorative ring */
     [data-theme="nouveau"] .donut-ring::before {
       content: '';
       position: absolute;
@@ -1879,7 +1837,6 @@
       pointer-events: none;
     }
 
-    /* Center hole */
     [data-theme="nouveau"] .donut-ring::after {
       inset: 30%;
       background: #f8f1de;
@@ -1901,11 +1858,9 @@
       color: #6b5a45 !important;
     }
 
-    [data-theme="nouveau"] #donutLegend span {
-      color: #6b5a45 !important;
-    }
+    [data-theme="nouveau"] #donutLegend span { color: #6b5a45 !important; }
 
-    /* Bar chart */
+    /* ─── Bar chart ─── */
     [data-theme="nouveau"] .bar-fill {
       border-radius: 8px 8px 0 0 !important;
       border: 1px solid rgba(93,116,101,0.5);
@@ -1917,6 +1872,7 @@
       font-family: 'Marcellus SC', serif;
     }
 
+    /* AI gradient text */
     [data-theme="nouveau"] .ai-gradient-text {
       background: linear-gradient(to right, #4a6c65, #c98b5f, #8c7d63);
       background-clip: text;
@@ -1924,25 +1880,16 @@
       -webkit-text-fill-color: transparent;
     }
 
-    [data-theme="nouveau"] .custom-scrollbar::-webkit-scrollbar-track {
-      background: rgba(234,221,192,0.9);
-    }
-
-    [data-theme="nouveau"] .custom-scrollbar::-webkit-scrollbar-thumb {
-      background: rgba(140,125,99,0.5);
-      border-radius: 4px;
-    }
-
-    [data-theme="nouveau"] .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-      background: rgba(93,116,101,0.6);
-    }
+    /* Scrollbars */
+    [data-theme="nouveau"] .custom-scrollbar::-webkit-scrollbar-track { background: rgba(234,221,192,0.9); }
+    [data-theme="nouveau"] .custom-scrollbar::-webkit-scrollbar-thumb { background: rgba(140,125,99,0.5); border-radius: 4px; }
+    [data-theme="nouveau"] .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: rgba(93,116,101,0.6); }
 
     /* Market section */
     [data-theme="nouveau"] .market-toggle {
       border-bottom: 1px solid rgba(140,125,99,0.3);
     }
 
-    /* Market ribbon title — scroll banner */
     [data-theme="nouveau"] .market-ribbon-title {
       position: relative;
       display: inline-flex;
@@ -1960,7 +1907,6 @@
       font-size: 0.72rem;
     }
 
-    /* Ribbon end-caps */
     [data-theme="nouveau"] .market-ribbon-title::before,
     [data-theme="nouveau"] .market-ribbon-title::after {
       content: '';
@@ -1983,176 +1929,71 @@
       clip-path: polygon(0 0, 0 100%, 100% 50%);
     }
 
-    /* ─── Nouveau JS-injected decoration classes ─── */
+    /* ─── JS-Injected Decoration Classes ─── */
 
-    /* Peacock decorations flanking the donut chart — separate left/right images */
+    /* Peacocks flanking the donut chart */
     [data-theme="nouveau"] .nouveau-peacock {
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      width: 7rem;
-      height: 12rem;
+      width: 9rem;
+      height: 16rem;
       pointer-events: none;
       z-index: 1;
-      opacity: 0.85;
+      opacity: 0.9;
       background-size: contain;
       background-repeat: no-repeat;
       background-position: center;
     }
-    [data-theme="nouveau"] .nouveau-peacock-left { left: 0.5rem; background-image: var(--nouveau-peacock-left); }
-    [data-theme="nouveau"] .nouveau-peacock-right { right: 0.5rem; background-image: var(--nouveau-peacock-right); }
+    [data-theme="nouveau"] .nouveau-peacock-left { left: -1rem; background-image: var(--nouveau-peacock-left); }
+    [data-theme="nouveau"] .nouveau-peacock-right { right: -1rem; background-image: var(--nouveau-peacock-right); }
 
-    /* Birds in header area */
-    [data-theme="nouveau"] .nouveau-bird {
-      position: absolute;
-      width: 3rem;
-      height: 1.8rem;
-      background-image: var(--nouveau-bird);
-      background-size: contain;
-      background-repeat: no-repeat;
-      pointer-events: none;
-      z-index: 2;
-      opacity: 0.6;
-    }
-    [data-theme="nouveau"] .nouveau-bird-left {
-      top: 0.2rem;
-      left: 1.5rem;
-    }
-    [data-theme="nouveau"] .nouveau-bird-right {
-      top: 0.2rem;
-      right: 1.5rem;
-      transform: scaleX(-1);
-    }
-
-    /* Vine connectors between panels */
-    [data-theme="nouveau"] .nouveau-vine {
-      position: absolute;
-      left: 50%;
-      transform: translateX(-50%);
-      bottom: -1.8rem;
-      width: 2.5rem;
-      height: 1.8rem;
-      background-image: var(--nouveau-vine-v);
-      background-size: contain;
-      background-repeat: no-repeat;
-      pointer-events: none;
-      z-index: 2;
-      opacity: 0.55;
-    }
-
-    /* Flower decorations at borders */
-    [data-theme="nouveau"] .nouveau-flower {
-      position: absolute;
-      width: 2.5rem;
-      height: 2.5rem;
-      background-image: var(--nouveau-flower);
-      background-size: contain;
-      background-repeat: no-repeat;
-      pointer-events: none;
-      z-index: 3;
-      opacity: 0.7;
-    }
-
-    /* Section divider flourish */
-    [data-theme="nouveau"] .nouveau-divider {
-      width: 100%;
-      height: 1.5rem;
-      background-image: var(--nouveau-divider);
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center;
-      pointer-events: none;
-      opacity: 0.6;
-      margin: -0.3rem 0;
-    }
-
-    /* Side border vine decorations — uses side-vine.png */
-    [data-theme="nouveau"] .nouveau-side-vine {
-      position: fixed;
-      top: 10%;
-      bottom: 10%;
-      width: 3rem;
-      pointer-events: none;
-      z-index: 0;
-      opacity: 0.45;
-      background-image: var(--nouveau-side-vine);
-      background-size: 100% auto;
-      background-repeat: repeat-y;
-    }
-    [data-theme="nouveau"] .nouveau-side-vine-left { left: 14px; }
-    [data-theme="nouveau"] .nouveau-side-vine-right { right: 14px; transform: scaleX(-1); }
-
-    /* Ornate medallion ring around donut — uses medallion-ring.png */
+    /* Medallion ring around donut — middle circle.png */
     [data-theme="nouveau"] .nouveau-medallion-ring {
       position: absolute;
-      inset: -2rem;
+      inset: -3rem;
       pointer-events: none;
       z-index: 0;
       background-image: var(--nouveau-medallion);
       background-size: contain;
       background-repeat: no-repeat;
       background-position: center;
-      /* Fallback if image not loaded */
-      border: 3px solid #8c7d63;
-      border-radius: 50%;
-      box-shadow:
-        inset 0 0 0 4px rgba(93,116,101,0.15),
-        inset 0 0 0 6px rgba(140,125,99,0.08),
-        0 0 0 2px rgba(140,125,99,0.2);
+      border: none;
+      border-radius: 0;
+      box-shadow: none;
     }
 
-    /* Floral corners on body frame */
-    [data-theme="nouveau"] .nouveau-frame-flower {
-      position: fixed;
-      width: 4.5rem;
-      height: 4.5rem;
-      background-image: var(--nouveau-flower);
-      background-size: contain;
-      background-repeat: no-repeat;
-      pointer-events: none;
-      z-index: 1;
-      opacity: 0.6;
-    }
-    [data-theme="nouveau"] .nouveau-frame-flower-tl { top: 22px; left: 22px; }
-    [data-theme="nouveau"] .nouveau-frame-flower-tr { top: 22px; right: 22px; transform: scaleX(-1); }
-    [data-theme="nouveau"] .nouveau-frame-flower-bl { bottom: 22px; left: 22px; transform: scaleY(-1); }
-    [data-theme="nouveau"] .nouveau-frame-flower-br { bottom: 22px; right: 22px; transform: scale(-1,-1); }
-
-    /* Top banner decoration behind header */
+    /* Top banner behind header */
     [data-theme="nouveau"] .nouveau-top-banner {
       position: absolute;
-      top: -1rem;
+      top: -0.5rem;
       left: 50%;
       transform: translateX(-50%);
-      width: min(90%, 50rem);
-      height: 6rem;
+      width: min(95%, 42rem);
+      height: 5rem;
       background-image: var(--nouveau-top-banner);
       background-size: contain;
       background-repeat: no-repeat;
       background-position: center;
       pointer-events: none;
       z-index: 0;
-      opacity: 0.85;
+      opacity: 0.9;
     }
 
-    /* Bottom banner decoration at page bottom */
+    /* Bottom banner at page bottom */
     [data-theme="nouveau"] .nouveau-bottom-banner {
-      position: fixed;
-      bottom: 12px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: min(80%, 40rem);
+      width: min(80%, 36rem);
       height: 4rem;
+      margin: 0.5rem auto 0;
       background-image: var(--nouveau-bottom-banner);
       background-size: contain;
       background-repeat: no-repeat;
       background-position: center;
       pointer-events: none;
-      z-index: 1;
-      opacity: 0.7;
+      opacity: 0.85;
     }
 
-    /* Ornate panel frame overlay (Salt Matrix Frame) */
+    /* Panel frame overlay (Salt Matrix Frame) */
     [data-theme="nouveau"] .nouveau-panel-frame {
       position: absolute;
       inset: -0.5rem;
@@ -2166,29 +2007,28 @@
 
     /* ─── Responsive ─── */
     @media (max-width: 1024px) {
-      [data-theme="nouveau"] .nouveau-peacock { width: 5rem; height: 9rem; opacity: 0.5; }
-      [data-theme="nouveau"] .nouveau-side-vine { display: none; }
-      [data-theme="nouveau"] .nouveau-frame-flower { width: 3rem; height: 3rem; }
-      [data-theme="nouveau"] .nouveau-top-banner { height: 4rem; }
-      [data-theme="nouveau"] .nouveau-bottom-banner { height: 3rem; }
+      [data-theme="nouveau"] .app-shell { padding: 3rem 2.5rem 2.5rem; }
+      [data-theme="nouveau"] .nouveau-peacock { width: 6rem; height: 11rem; opacity: 0.7; }
       [data-theme="nouveau"] .nouveau-panel-frame { display: none; }
     }
 
+    @media (max-width: 768px) {
+      [data-theme="nouveau"] .app-shell { padding: 2.5rem 1.5rem 2rem; }
+
+      /* Stack global params and salt matrix in single column on small screens */
+      [data-theme="nouveau"] .main-grid {
+        grid-template-columns: 1fr !important;
+      }
+      [data-theme="nouveau"] .section-global { grid-column: 1; }
+      [data-theme="nouveau"] .section-matrix { grid-column: 1; }
+
+      [data-theme="nouveau"] .nouveau-peacock { width: 5rem; height: 9rem; left: 0; right: 0; }
+      [data-theme="nouveau"] .nouveau-medallion-ring { inset: -1.5rem; }
+      [data-theme="nouveau"] .nouveau-top-banner { height: 3.5rem; }
+    }
+
     @media (max-width: 640px) {
-      [data-theme="nouveau"] body::before {
-        inset: 4px;
-        border-width: 5px;
-        border-radius: 16px;
-      }
-
-      [data-theme="nouveau"] body::after {
-        inset: 14px;
-        border-radius: 12px;
-      }
-
-      [data-theme="nouveau"] .app-shell {
-        padding-top: 1rem;
-      }
+      [data-theme="nouveau"] .app-shell { padding: 1.5rem 0.8rem 1.5rem; }
 
       [data-theme="nouveau"] .app-header {
         align-items: flex-start;
@@ -2202,20 +2042,15 @@
         margin-left: auto;
       }
 
-      [data-theme="nouveau"] .nouveau-peacock { display: none; }
-      [data-theme="nouveau"] .nouveau-bird { display: none; }
-      [data-theme="nouveau"] .nouveau-side-vine { display: none; }
-      [data-theme="nouveau"] .nouveau-frame-flower { display: none; }
-      [data-theme="nouveau"] .nouveau-corner { display: none; }
-      [data-theme="nouveau"] .nouveau-top-banner { display: none; }
-      [data-theme="nouveau"] .nouveau-bottom-banner { display: none; }
-      [data-theme="nouveau"] .nouveau-panel-frame { display: none; }
-
       [data-theme="nouveau"] .section-donut .relative.flex-shrink-0,
       [data-theme="nouveau"] #donutChart {
-        width: 13rem;
-        height: 13rem;
+        width: 14rem;
+        height: 14rem;
       }
+
+      [data-theme="nouveau"] .nouveau-peacock { display: none; }
+      [data-theme="nouveau"] .nouveau-medallion-ring { inset: -1rem; }
+      [data-theme="nouveau"] .nouveau-top-banner { display: none; }
     }
 
     /* === SEMANTIC CLASSES === */
@@ -2772,7 +2607,7 @@
 
     // ─── SKIN SWITCHER ────────────────────────────────────────────
     function clearThemeDecorations() {
-      document.querySelectorAll('.alchemy-scroll-top, .alchemy-scroll-bottom, .future-rail-left, .future-rail-right, .future-screw, .future-module-badge, .future-connector, .future-arc, .xfiles-corner, .xfiles-edge, .nouveau-corner, .nouveau-peacock, .nouveau-bird, .nouveau-vine, .nouveau-flower, .nouveau-divider, .nouveau-side-vine, .nouveau-medallion-ring, .nouveau-frame-flower, .nouveau-top-banner, .nouveau-bottom-banner, .nouveau-panel-frame').forEach(el => el.remove());
+      document.querySelectorAll('.alchemy-scroll-top, .alchemy-scroll-bottom, .future-rail-left, .future-rail-right, .future-screw, .future-module-badge, .future-connector, .future-arc, .xfiles-corner, .xfiles-edge, .nouveau-peacock, .nouveau-medallion-ring, .nouveau-top-banner, .nouveau-bottom-banner, .nouveau-panel-frame').forEach(el => el.remove());
       document.querySelectorAll('.neon-panel').forEach(panel => {
         panel.style.removeProperty('overflow');
       });
@@ -2843,17 +2678,7 @@
     }
 
     function applyNouveauDecorations() {
-      // Corner ornaments on every panel (uses corner-ornament.png via CSS)
-      document.querySelectorAll('.neon-panel').forEach(panel => {
-        panel.style.overflow = 'visible';
-        ['tl', 'tr', 'bl', 'br'].forEach(corner => {
-          const el = document.createElement('div');
-          el.className = `nouveau-corner nouveau-corner-${corner}`;
-          panel.appendChild(el);
-        });
-      });
-
-      // Peacock images flanking the donut chart (uses peacock.png via CSS)
+      // Peacocks flanking the donut chart
       const donutSection = document.querySelector('.section-donut');
       if (donutSection) {
         const leftPeacock = document.createElement('div');
@@ -2864,7 +2689,7 @@
         rightPeacock.className = 'nouveau-peacock nouveau-peacock-right';
         donutSection.appendChild(rightPeacock);
 
-        // Ornate medallion ring around donut (uses medallion-ring.png via CSS)
+        // Medallion ring around donut (middle circle.png)
         const donutContainer = donutSection.querySelector('.relative.flex-shrink-0');
         if (donutContainer) {
           const ring = document.createElement('div');
@@ -2874,70 +2699,7 @@
         }
       }
 
-      // Birds in header (uses header-bird.png via CSS)
-      const header = document.querySelector('.app-header');
-      if (header) {
-        const birdL = document.createElement('div');
-        birdL.className = 'nouveau-bird nouveau-bird-left';
-        header.appendChild(birdL);
-        const birdR = document.createElement('div');
-        birdR.className = 'nouveau-bird nouveau-bird-right';
-        header.appendChild(birdR);
-      }
-
-      // Vine connectors between left-column panels (uses vine-connector.png via CSS)
-      const leftPanels = document.querySelectorAll('.left-column .neon-panel');
-      leftPanels.forEach((panel, i) => {
-        if (i < leftPanels.length - 1) {
-          const vine = document.createElement('div');
-          vine.className = 'nouveau-vine';
-          panel.appendChild(vine);
-        }
-      });
-
-      // Flowers at panel midpoints (uses flower.png via CSS)
-      document.querySelectorAll('.neon-panel').forEach((panel, i) => {
-        const flower = document.createElement('div');
-        flower.className = 'nouveau-flower';
-        if (i % 2 === 0) {
-          flower.style.top = '-1rem';
-          flower.style.right = '2.5rem';
-        } else {
-          flower.style.bottom = '-1rem';
-          flower.style.left = '2.5rem';
-        }
-        panel.appendChild(flower);
-      });
-
-      // Side vine decorations on the frame (uses side-vine.png via CSS)
-      const appShell = document.querySelector('.app-shell');
-      if (appShell) {
-        const vineL = document.createElement('div');
-        vineL.className = 'nouveau-side-vine nouveau-side-vine-left';
-        document.body.appendChild(vineL);
-        const vineR = document.createElement('div');
-        vineR.className = 'nouveau-side-vine nouveau-side-vine-right';
-        document.body.appendChild(vineR);
-      }
-
-      // Frame corner flowers (uses flower.png via CSS)
-      ['tl', 'tr', 'bl', 'br'].forEach(corner => {
-        const fl = document.createElement('div');
-        fl.className = `nouveau-frame-flower nouveau-frame-flower-${corner}`;
-        document.body.appendChild(fl);
-      });
-
-      // Section dividers between right column panels (uses divider.png via CSS)
-      const rightPanels = document.querySelectorAll('.right-column .neon-panel');
-      rightPanels.forEach((panel, i) => {
-        if (i < rightPanels.length - 1) {
-          const divider = document.createElement('div');
-          divider.className = 'nouveau-divider';
-          panel.parentNode.insertBefore(divider, panel.nextSibling);
-        }
-      });
-
-      // Top banner behind header (uses top banner.png)
+      // Top banner behind header
       const header = document.querySelector('.app-header');
       if (header) {
         header.style.position = 'relative';
@@ -2946,18 +2708,12 @@
         header.appendChild(topBanner);
       }
 
-      // Bottom banner at page footer (uses bottom banner.png)
-      const bottomBanner = document.createElement('div');
-      bottomBanner.className = 'nouveau-bottom-banner';
-      document.body.appendChild(bottomBanner);
-
-      // Panel frame overlay on key panels (uses Salt Matrix Frame.png)
-      const donutPanel = document.querySelector('.section-donut');
-      if (donutPanel) {
-        donutPanel.style.position = 'relative';
-        const frame = document.createElement('div');
-        frame.className = 'nouveau-panel-frame';
-        donutPanel.appendChild(frame);
+      // Bottom banner at page bottom
+      const appShell = document.querySelector('.app-shell');
+      if (appShell) {
+        const bottomBanner = document.createElement('div');
+        bottomBanner.className = 'nouveau-bottom-banner';
+        appShell.appendChild(bottomBanner);
       }
     }
 
