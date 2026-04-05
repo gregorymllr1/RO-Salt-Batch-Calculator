@@ -1399,6 +1399,7 @@
       z-index: 1;
       max-width: 52rem;
       padding: 4.5rem 5rem 4rem;
+      overflow: hidden;
     }
 
     /* Full Frame.png as page border */
@@ -1446,11 +1447,11 @@
       padding-top: 0.5rem;
       padding-bottom: 0.5rem;
       margin-bottom: 0.5rem;
-      z-index: 1;
+      z-index: 2;
     }
 
     [data-theme="nouveau"] .app-header > div:first-child { display: none; }
-    [data-theme="nouveau"] .app-header > div:nth-child(2) { text-align: center; }
+    [data-theme="nouveau"] .app-header > div:nth-child(2) { text-align: center; position: relative; z-index: 2; }
 
     [data-theme="nouveau"] .app-header h1 {
       font-family: 'Cinzel Decorative', 'Marcellus SC', serif;
@@ -1936,8 +1937,8 @@
       position: absolute;
       top: 50%;
       transform: translateY(-50%);
-      width: 9rem;
-      height: 16rem;
+      width: 8rem;
+      height: 14rem;
       pointer-events: none;
       z-index: 1;
       opacity: 0.9;
@@ -1945,8 +1946,8 @@
       background-repeat: no-repeat;
       background-position: center;
     }
-    [data-theme="nouveau"] .nouveau-peacock-left { left: -1rem; background-image: var(--nouveau-peacock-left); }
-    [data-theme="nouveau"] .nouveau-peacock-right { right: -1rem; background-image: var(--nouveau-peacock-right); }
+    [data-theme="nouveau"] .nouveau-peacock-left { left: 0; background-image: var(--nouveau-peacock-left); }
+    [data-theme="nouveau"] .nouveau-peacock-right { right: 0; background-image: var(--nouveau-peacock-right); }
 
     /* Medallion ring around donut — middle circle.png */
     [data-theme="nouveau"] .nouveau-medallion-ring {
@@ -1966,18 +1967,18 @@
     /* Top banner behind header */
     [data-theme="nouveau"] .nouveau-top-banner {
       position: absolute;
-      top: -0.5rem;
+      top: -0.8rem;
       left: 50%;
       transform: translateX(-50%);
-      width: min(95%, 42rem);
-      height: 5rem;
+      width: min(100%, 44rem);
+      height: 5.5rem;
       background-image: var(--nouveau-top-banner);
       background-size: contain;
       background-repeat: no-repeat;
       background-position: center;
       pointer-events: none;
       z-index: 0;
-      opacity: 0.9;
+      opacity: 0.85;
     }
 
     /* Bottom banner at page bottom */
