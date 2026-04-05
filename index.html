@@ -1367,13 +1367,22 @@
 
     /* ─── NOUVEAU ORNATE ART NOUVEAU OVERRIDES ─── */
 
-    /* --- Nouveau SVG data URIs --- */
+    /* --- Nouveau image asset references --- */
+    /* PNG artwork in Nouveau/ folder */
     [data-theme="nouveau"] {
-      --nouveau-corner: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cpath d='M10 110 C10 60 15 30 50 15 C55 13 58 10 60 5' fill='none' stroke='%235d7465' stroke-width='2.5'/%3E%3Cpath d='M10 110 C30 110 55 105 70 85 C78 73 80 60 80 48' fill='none' stroke='%235d7465' stroke-width='2.5'/%3E%3Cpath d='M35 95 C35 75 40 55 55 42 C62 36 72 34 80 33' fill='none' stroke='%238c7d63' stroke-width='1.8'/%3E%3Ccircle cx='50' cy='15' r='5' fill='%23c98b5f' stroke='%235d7465' stroke-width='1.5'/%3E%3Ccircle cx='80' cy='48' r='5' fill='%23c98b5f' stroke='%235d7465' stroke-width='1.5'/%3E%3Ccircle cx='80' cy='33' r='3.5' fill='%232f7f81' stroke='%235d7465' stroke-width='1'/%3E%3Cpath d='M48 18 C42 25 38 35 36 50 C34 62 36 72 40 80' fill='none' stroke='%238c7d63' stroke-width='1.2'/%3E%3Cpath d='M78 50 C70 55 62 58 55 58 C48 58 42 55 38 50' fill='none' stroke='%23a08060' stroke-width='1'/%3E%3Cellipse cx='20' cy='98' rx='8' ry='5' fill='%232f7f81' opacity='0.2'/%3E%3Cpath d='M42 22 Q46 19 50 22' fill='%23e87461' stroke='%23c25545' stroke-width='0.8'/%3E%3Cpath d='M45 20 Q46 16 47 20' fill='%23e87461' stroke='%23c25545' stroke-width='0.6'/%3E%3C/svg%3E");
-      --nouveau-flower: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 60 60'%3E%3Cg transform='translate(30,30)'%3E%3Cellipse rx='10' ry='5' fill='%23e8a87c' opacity='0.75' transform='rotate(0)'/%3E%3Cellipse rx='10' ry='5' fill='%23e8a87c' opacity='0.75' transform='rotate(60)'/%3E%3Cellipse rx='10' ry='5' fill='%23e8a87c' opacity='0.75' transform='rotate(120)'/%3E%3Cellipse rx='10' ry='5' fill='%23db8a6a' opacity='0.6' transform='rotate(30)'/%3E%3Cellipse rx='10' ry='5' fill='%23db8a6a' opacity='0.6' transform='rotate(90)'/%3E%3Cellipse rx='10' ry='5' fill='%23db8a6a' opacity='0.6' transform='rotate(150)'/%3E%3Ccircle r='5' fill='%23c98b5f'/%3E%3Ccircle r='2.5' fill='%23eee1c5'/%3E%3C/g%3E%3C/svg%3E");
-      --nouveau-vine-v: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 200'%3E%3Cpath d='M20 0 C20 30 8 50 8 80 C8 110 32 130 32 160 C32 180 20 200 20 200' fill='none' stroke='%235d7465' stroke-width='2' opacity='0.55'/%3E%3Cpath d='M8 50 C2 45 -2 38 5 32 C10 28 14 35 10 42' fill='%234a7a5e' opacity='0.4'/%3E%3Cpath d='M32 130 C38 125 42 118 35 112 C30 108 26 115 30 122' fill='%234a7a5e' opacity='0.4'/%3E%3Ccircle cx='8' cy='80' r='3' fill='%23c98b5f' opacity='0.5'/%3E%3Ccircle cx='32' cy='160' r='3' fill='%23e8a87c' opacity='0.45'/%3E%3C/svg%3E");
-      --nouveau-divider: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 30'%3E%3Cpath d='M10 15 C40 15 60 5 90 5 C110 5 120 10 150 10 C180 10 190 5 210 5 C240 5 260 15 290 15' fill='none' stroke='%238c7d63' stroke-width='1.5'/%3E%3Cpath d='M10 15 C40 15 60 25 90 25 C110 25 120 20 150 20 C180 20 190 25 210 25 C240 25 260 15 290 15' fill='none' stroke='%238c7d63' stroke-width='1.5'/%3E%3Ccircle cx='150' cy='15' r='4' fill='%232f7f81' stroke='%238c7d63' stroke-width='1'/%3E%3Ccircle cx='90' cy='15' r='2.5' fill='%23c98b5f' stroke='%238c7d63' stroke-width='0.8'/%3E%3Ccircle cx='210' cy='15' r='2.5' fill='%23c98b5f' stroke='%238c7d63' stroke-width='0.8'/%3E%3C/svg%3E");
-      --nouveau-bird: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 50 30'%3E%3Cpath d='M5 18 C10 10 18 6 25 8 C28 9 30 12 32 10 C35 6 40 4 45 6' fill='none' stroke='%235d7465' stroke-width='1.8' stroke-linecap='round'/%3E%3Cpath d='M25 8 C22 12 20 18 22 22' fill='none' stroke='%235d7465' stroke-width='1.2'/%3E%3Cpath d='M5 18 C8 20 12 20 15 18' fill='%235d7465' opacity='0.3'/%3E%3Cpath d='M45 6 C42 8 40 10 38 10' fill='%235d7465' opacity='0.3'/%3E%3C/svg%3E");
+      --nouveau-corner: url("Nouveau/Flower%20frame%20smaller.png");
+      --nouveau-flower: url("Nouveau/Flower%20frame%20smaller.png");
+      --nouveau-vine-v: url("Nouveau/Flower%20frame%20smaller.png");
+      --nouveau-divider: url("Nouveau/bottom%20banner.png");
+      --nouveau-bird: url("Nouveau/Flower%20frame%20smaller.png");
+      --nouveau-side-vine: url("Nouveau/Flower%20frame%20smaller.png");
+      --nouveau-peacock-left: url("Nouveau/left%20peacock.png");
+      --nouveau-peacock-right: url("Nouveau/right%20peacock.png");
+      --nouveau-medallion: url("Nouveau/middle%20circle.png");
+      --nouveau-border-frame: url("Nouveau/Full%20Frame.png");
+      --nouveau-top-banner: url("Nouveau/top%20banner.png");
+      --nouveau-bottom-banner: url("Nouveau/bottom%20banner.png");
+      --nouveau-panel-frame: url("Nouveau/Salt%20Matrix%20Frame.png");
     }
 
     [data-theme="nouveau"] body {
@@ -1388,15 +1397,20 @@
       letter-spacing: 0.01em;
     }
 
-    /* Outer ornate frame — thick green border */
+    /* Ornate border frame — uses border-frame.png if available, falls back to CSS */
     [data-theme="nouveau"] body::before {
       content: '';
       position: fixed;
-      inset: 6px;
-      border: 8px solid #5d7465;
-      border-radius: 24px;
+      inset: 0;
+      background-image: var(--nouveau-border-frame);
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
       pointer-events: none;
       z-index: 0;
+      /* Fallback border if image hasn't loaded */
+      border: 8px solid #5d7465;
+      border-radius: 24px;
+      margin: 6px;
       box-shadow:
         inset 0 0 0 2px rgba(255,255,255,0.15),
         inset 0 0 30px rgba(93,116,101,0.12),
@@ -1404,7 +1418,7 @@
         0 8px 32px rgba(62,50,35,0.25);
     }
 
-    /* Inner decorative frame line */
+    /* Inner decorative frame line (hidden when border-frame.png is present) */
     [data-theme="nouveau"] body::after {
       content: '';
       position: fixed;
@@ -1463,7 +1477,7 @@
     [data-theme="nouveau"] .app-header .ml-auto {
       position: absolute;
       right: 0;
-      top: 50%;
+      top: calc(50% + 1.15rem);
       transform: translateY(-50%);
       gap: 0.45rem;
       padding: 0.36rem 0.58rem 0.36rem 0.82rem;
@@ -1971,7 +1985,7 @@
 
     /* ─── Nouveau JS-injected decoration classes ─── */
 
-    /* Peacock decorations flanking the donut chart */
+    /* Peacock decorations flanking the donut chart — separate left/right images */
     [data-theme="nouveau"] .nouveau-peacock {
       position: absolute;
       top: 50%;
@@ -1981,9 +1995,12 @@
       pointer-events: none;
       z-index: 1;
       opacity: 0.85;
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
     }
-    [data-theme="nouveau"] .nouveau-peacock-left { left: 0.5rem; }
-    [data-theme="nouveau"] .nouveau-peacock-right { right: 0.5rem; transform: translateY(-50%) scaleX(-1); }
+    [data-theme="nouveau"] .nouveau-peacock-left { left: 0.5rem; background-image: var(--nouveau-peacock-left); }
+    [data-theme="nouveau"] .nouveau-peacock-right { right: 0.5rem; background-image: var(--nouveau-peacock-right); }
 
     /* Birds in header area */
     [data-theme="nouveau"] .nouveau-bird {
@@ -2049,7 +2066,7 @@
       margin: -0.3rem 0;
     }
 
-    /* Side border vine decorations */
+    /* Side border vine decorations — uses side-vine.png */
     [data-theme="nouveau"] .nouveau-side-vine {
       position: fixed;
       top: 10%;
@@ -2057,22 +2074,27 @@
       width: 3rem;
       pointer-events: none;
       z-index: 0;
-      opacity: 0.35;
-      background-image: var(--nouveau-vine-v);
+      opacity: 0.45;
+      background-image: var(--nouveau-side-vine);
       background-size: 100% auto;
       background-repeat: repeat-y;
     }
     [data-theme="nouveau"] .nouveau-side-vine-left { left: 14px; }
     [data-theme="nouveau"] .nouveau-side-vine-right { right: 14px; transform: scaleX(-1); }
 
-    /* Ornate medallion ring around donut */
+    /* Ornate medallion ring around donut — uses medallion-ring.png */
     [data-theme="nouveau"] .nouveau-medallion-ring {
       position: absolute;
-      inset: -1.5rem;
-      border: 3px solid #8c7d63;
-      border-radius: 50%;
+      inset: -2rem;
       pointer-events: none;
       z-index: 0;
+      background-image: var(--nouveau-medallion);
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      /* Fallback if image not loaded */
+      border: 3px solid #8c7d63;
+      border-radius: 50%;
       box-shadow:
         inset 0 0 0 4px rgba(93,116,101,0.15),
         inset 0 0 0 6px rgba(140,125,99,0.08),
@@ -2096,11 +2118,60 @@
     [data-theme="nouveau"] .nouveau-frame-flower-bl { bottom: 22px; left: 22px; transform: scaleY(-1); }
     [data-theme="nouveau"] .nouveau-frame-flower-br { bottom: 22px; right: 22px; transform: scale(-1,-1); }
 
+    /* Top banner decoration behind header */
+    [data-theme="nouveau"] .nouveau-top-banner {
+      position: absolute;
+      top: -1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(90%, 50rem);
+      height: 6rem;
+      background-image: var(--nouveau-top-banner);
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.85;
+    }
+
+    /* Bottom banner decoration at page bottom */
+    [data-theme="nouveau"] .nouveau-bottom-banner {
+      position: fixed;
+      bottom: 12px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(80%, 40rem);
+      height: 4rem;
+      background-image: var(--nouveau-bottom-banner);
+      background-size: contain;
+      background-repeat: no-repeat;
+      background-position: center;
+      pointer-events: none;
+      z-index: 1;
+      opacity: 0.7;
+    }
+
+    /* Ornate panel frame overlay (Salt Matrix Frame) */
+    [data-theme="nouveau"] .nouveau-panel-frame {
+      position: absolute;
+      inset: -0.5rem;
+      background-image: var(--nouveau-panel-frame);
+      background-size: 100% 100%;
+      background-repeat: no-repeat;
+      pointer-events: none;
+      z-index: 5;
+      opacity: 0.8;
+    }
+
     /* ─── Responsive ─── */
     @media (max-width: 1024px) {
       [data-theme="nouveau"] .nouveau-peacock { width: 5rem; height: 9rem; opacity: 0.5; }
       [data-theme="nouveau"] .nouveau-side-vine { display: none; }
       [data-theme="nouveau"] .nouveau-frame-flower { width: 3rem; height: 3rem; }
+      [data-theme="nouveau"] .nouveau-top-banner { height: 4rem; }
+      [data-theme="nouveau"] .nouveau-bottom-banner { height: 3rem; }
+      [data-theme="nouveau"] .nouveau-panel-frame { display: none; }
     }
 
     @media (max-width: 640px) {
@@ -2136,6 +2207,9 @@
       [data-theme="nouveau"] .nouveau-side-vine { display: none; }
       [data-theme="nouveau"] .nouveau-frame-flower { display: none; }
       [data-theme="nouveau"] .nouveau-corner { display: none; }
+      [data-theme="nouveau"] .nouveau-top-banner { display: none; }
+      [data-theme="nouveau"] .nouveau-bottom-banner { display: none; }
+      [data-theme="nouveau"] .nouveau-panel-frame { display: none; }
 
       [data-theme="nouveau"] .section-donut .relative.flex-shrink-0,
       [data-theme="nouveau"] #donutChart {
@@ -2698,7 +2772,7 @@
 
     // ─── SKIN SWITCHER ────────────────────────────────────────────
     function clearThemeDecorations() {
-      document.querySelectorAll('.alchemy-scroll-top, .alchemy-scroll-bottom, .future-rail-left, .future-rail-right, .future-screw, .future-module-badge, .future-connector, .future-arc, .xfiles-corner, .xfiles-edge, .nouveau-corner, .nouveau-peacock, .nouveau-bird, .nouveau-vine, .nouveau-flower, .nouveau-divider, .nouveau-side-vine, .nouveau-medallion-ring, .nouveau-frame-flower').forEach(el => el.remove());
+      document.querySelectorAll('.alchemy-scroll-top, .alchemy-scroll-bottom, .future-rail-left, .future-rail-right, .future-screw, .future-module-badge, .future-connector, .future-arc, .xfiles-corner, .xfiles-edge, .nouveau-corner, .nouveau-peacock, .nouveau-bird, .nouveau-vine, .nouveau-flower, .nouveau-divider, .nouveau-side-vine, .nouveau-medallion-ring, .nouveau-frame-flower, .nouveau-top-banner, .nouveau-bottom-banner, .nouveau-panel-frame').forEach(el => el.remove());
       document.querySelectorAll('.neon-panel').forEach(panel => {
         panel.style.removeProperty('overflow');
       });
@@ -2769,7 +2843,7 @@
     }
 
     function applyNouveauDecorations() {
-      // Corner ornaments on every panel
+      // Corner ornaments on every panel (uses corner-ornament.png via CSS)
       document.querySelectorAll('.neon-panel').forEach(panel => {
         panel.style.overflow = 'visible';
         ['tl', 'tr', 'bl', 'br'].forEach(corner => {
@@ -2779,65 +2853,18 @@
         });
       });
 
-      // Peacock SVGs flanking the donut chart
+      // Peacock images flanking the donut chart (uses peacock.png via CSS)
       const donutSection = document.querySelector('.section-donut');
       if (donutSection) {
-        const peacockSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 220">
-          <defs>
-            <linearGradient id="pBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2f7f81"/><stop offset="100%" stop-color="#1a4a4c"/></linearGradient>
-            <linearGradient id="pTail" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#5d7465"/><stop offset="50%" stop-color="#2f7f81"/><stop offset="100%" stop-color="#1a4a4c"/></linearGradient>
-          </defs>
-          <!-- Tail fan -->
-          <ellipse cx="60" cy="130" rx="52" ry="80" fill="url(#pTail)" opacity="0.3"/>
-          <ellipse cx="60" cy="130" rx="44" ry="70" fill="none" stroke="#5d7465" stroke-width="1" opacity="0.4"/>
-          <!-- Tail feather eyes -->
-          <g opacity="0.6">
-            <circle cx="28" cy="95" r="8" fill="#c98b5f" opacity="0.5"/><circle cx="28" cy="95" r="4" fill="#2f7f81" opacity="0.7"/><circle cx="28" cy="95" r="2" fill="#f4ecd8"/>
-            <circle cx="60" cy="75" r="9" fill="#c98b5f" opacity="0.5"/><circle cx="60" cy="75" r="5" fill="#2f7f81" opacity="0.7"/><circle cx="60" cy="75" r="2.5" fill="#f4ecd8"/>
-            <circle cx="92" cy="95" r="8" fill="#c98b5f" opacity="0.5"/><circle cx="92" cy="95" r="4" fill="#2f7f81" opacity="0.7"/><circle cx="92" cy="95" r="2" fill="#f4ecd8"/>
-            <circle cx="36" cy="140" r="7" fill="#c98b5f" opacity="0.4"/><circle cx="36" cy="140" r="3.5" fill="#2f7f81" opacity="0.6"/><circle cx="36" cy="140" r="1.8" fill="#f4ecd8"/>
-            <circle cx="60" cy="155" r="7" fill="#c98b5f" opacity="0.4"/><circle cx="60" cy="155" r="3.5" fill="#2f7f81" opacity="0.6"/><circle cx="60" cy="155" r="1.8" fill="#f4ecd8"/>
-            <circle cx="84" cy="140" r="7" fill="#c98b5f" opacity="0.4"/><circle cx="84" cy="140" r="3.5" fill="#2f7f81" opacity="0.6"/><circle cx="84" cy="140" r="1.8" fill="#f4ecd8"/>
-            <circle cx="22" cy="120" r="6" fill="#c98b5f" opacity="0.35"/><circle cx="22" cy="120" r="3" fill="#2f7f81" opacity="0.5"/><circle cx="22" cy="120" r="1.5" fill="#f4ecd8"/>
-            <circle cx="98" cy="120" r="6" fill="#c98b5f" opacity="0.35"/><circle cx="98" cy="120" r="3" fill="#2f7f81" opacity="0.5"/><circle cx="98" cy="120" r="1.5" fill="#f4ecd8"/>
-          </g>
-          <!-- Tail feather lines -->
-          <g stroke="#5d7465" stroke-width="0.8" fill="none" opacity="0.35">
-            <path d="M60 55 Q55 75 28 95"/><path d="M60 55 Q60 70 60 75"/>
-            <path d="M60 55 Q65 75 92 95"/><path d="M60 55 Q40 90 22 120"/>
-            <path d="M60 55 Q80 90 98 120"/><path d="M60 55 Q38 100 36 140"/>
-            <path d="M60 55 Q82 100 84 140"/><path d="M60 55 Q58 110 60 155"/>
-          </g>
-          <!-- Body -->
-          <ellipse cx="60" cy="48" rx="10" ry="18" fill="url(#pBody)" opacity="0.75"/>
-          <!-- Neck -->
-          <path d="M60 32 Q58 20 56 12" stroke="#1a4a4c" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.7"/>
-          <!-- Head -->
-          <circle cx="55" cy="10" r="5" fill="#2f7f81" opacity="0.7"/>
-          <!-- Crown -->
-          <line x1="53" y1="6" x2="51" y2="1" stroke="#c98b5f" stroke-width="1.2" opacity="0.6"/>
-          <line x1="55" y1="5" x2="55" y2="0" stroke="#c98b5f" stroke-width="1.2" opacity="0.6"/>
-          <line x1="57" y1="6" x2="59" y2="1" stroke="#c98b5f" stroke-width="1.2" opacity="0.6"/>
-          <circle cx="51" cy="0" r="1.2" fill="#c98b5f" opacity="0.6"/>
-          <circle cx="55" cy="-1" r="1.2" fill="#c98b5f" opacity="0.6"/>
-          <circle cx="59" cy="0" r="1.2" fill="#c98b5f" opacity="0.6"/>
-          <!-- Beak -->
-          <path d="M50 10 L47 9 L50 8" fill="#8c7d63" opacity="0.6"/>
-          <!-- Eye -->
-          <circle cx="53" cy="9" r="1" fill="#f4ecd8"/>
-        </svg>`;
-
         const leftPeacock = document.createElement('div');
         leftPeacock.className = 'nouveau-peacock nouveau-peacock-left';
-        leftPeacock.innerHTML = peacockSvg;
         donutSection.appendChild(leftPeacock);
 
         const rightPeacock = document.createElement('div');
         rightPeacock.className = 'nouveau-peacock nouveau-peacock-right';
-        rightPeacock.innerHTML = peacockSvg;
         donutSection.appendChild(rightPeacock);
 
-        // Ornate medallion ring around donut
+        // Ornate medallion ring around donut (uses medallion-ring.png via CSS)
         const donutContainer = donutSection.querySelector('.relative.flex-shrink-0');
         if (donutContainer) {
           const ring = document.createElement('div');
@@ -2847,7 +2874,7 @@
         }
       }
 
-      // Birds in header
+      // Birds in header (uses header-bird.png via CSS)
       const header = document.querySelector('.app-header');
       if (header) {
         const birdL = document.createElement('div');
@@ -2858,7 +2885,7 @@
         header.appendChild(birdR);
       }
 
-      // Vine connectors between left-column panels
+      // Vine connectors between left-column panels (uses vine-connector.png via CSS)
       const leftPanels = document.querySelectorAll('.left-column .neon-panel');
       leftPanels.forEach((panel, i) => {
         if (i < leftPanels.length - 1) {
@@ -2868,7 +2895,7 @@
         }
       });
 
-      // Flowers at panel midpoints (top-right and bottom-left alternating)
+      // Flowers at panel midpoints (uses flower.png via CSS)
       document.querySelectorAll('.neon-panel').forEach((panel, i) => {
         const flower = document.createElement('div');
         flower.className = 'nouveau-flower';
@@ -2882,7 +2909,7 @@
         panel.appendChild(flower);
       });
 
-      // Side vine decorations on the frame
+      // Side vine decorations on the frame (uses side-vine.png via CSS)
       const appShell = document.querySelector('.app-shell');
       if (appShell) {
         const vineL = document.createElement('div');
@@ -2893,14 +2920,14 @@
         document.body.appendChild(vineR);
       }
 
-      // Frame corner flowers
+      // Frame corner flowers (uses flower.png via CSS)
       ['tl', 'tr', 'bl', 'br'].forEach(corner => {
         const fl = document.createElement('div');
         fl.className = `nouveau-frame-flower nouveau-frame-flower-${corner}`;
         document.body.appendChild(fl);
       });
 
-      // Section dividers between right column panels
+      // Section dividers between right column panels (uses divider.png via CSS)
       const rightPanels = document.querySelectorAll('.right-column .neon-panel');
       rightPanels.forEach((panel, i) => {
         if (i < rightPanels.length - 1) {
@@ -2909,6 +2936,29 @@
           panel.parentNode.insertBefore(divider, panel.nextSibling);
         }
       });
+
+      // Top banner behind header (uses top banner.png)
+      const header = document.querySelector('.app-header');
+      if (header) {
+        header.style.position = 'relative';
+        const topBanner = document.createElement('div');
+        topBanner.className = 'nouveau-top-banner';
+        header.appendChild(topBanner);
+      }
+
+      // Bottom banner at page footer (uses bottom banner.png)
+      const bottomBanner = document.createElement('div');
+      bottomBanner.className = 'nouveau-bottom-banner';
+      document.body.appendChild(bottomBanner);
+
+      // Panel frame overlay on key panels (uses Salt Matrix Frame.png)
+      const donutPanel = document.querySelector('.section-donut');
+      if (donutPanel) {
+        donutPanel.style.position = 'relative';
+        const frame = document.createElement('div');
+        frame.className = 'nouveau-panel-frame';
+        donutPanel.appendChild(frame);
+      }
     }
 
     function applyXFilesDecorations() {
